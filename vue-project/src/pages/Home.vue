@@ -2,7 +2,7 @@
 import PostCard from "@/components/PostCard.vue";
 import { ref } from "vue";
 const activeTab = ref('general');
-const posts = ref([
+const cards = ref([
   {
     id: 1,
     tag: "visa",
@@ -59,12 +59,12 @@ const posts = ref([
       </button>
     </div>
 
-    <!-- Posts List -->
-    <div class="posts-list">
+    <!-- Cards List -->
+    <div class="cards-list">
       <PostCard
-        v-for="post in posts" :key="post.id" :tag="post.tag" :time="post.time"
-        :title="post.title" :author="post.author" :content="post.content"
-        :likes="post.likes"
+        v-for="card in cards" :key="card.id" :tag="card.tag" :time="card.time"
+        :title="card.title" :author="card.author" :content="card.content"
+        :likes="card.likes"
       />
     </div>
   </div>
@@ -116,8 +116,8 @@ const posts = ref([
   border-bottom: 2px solid #3182ce;
 }
 
-/* Posts list styles */
-.posts-list {
+/* Cards list styles */
+.cards-list {
   padding: 1rem;
 }
 </style>

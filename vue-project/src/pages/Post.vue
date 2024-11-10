@@ -1,6 +1,15 @@
 <script setup>
 import Comment from '@/components/Comment.vue';
-
+import Article from '@/components/Article.vue';
+import { ref } from 'vue';
+const article = ref({
+  tag: "Visa",
+  time: "7시간 전",
+  title: "Questions About Required Documents",
+  author: "zypher",
+  content: "Lorem ipsum dolor sit amet consectetur. In diam adipiscing elit morbi. Malesuada feugiat non tellus sagittis commodo sit. Ultrices phasellus etest sagittis. Quis maecenas in laoreet fusce in gravida morbi. Sit id nuncid est.",
+  likes: "1.4k",
+})
 </script>
 <template>
   <div class="container">
@@ -10,32 +19,19 @@ import Comment from '@/components/Comment.vue';
       <h2>QnA</h2>
     </div>
 
-    <!-- Question Section -->
-    <div class="question-section">
-      <div class="tag">Visa</div>
-      <h3 class="question-title">Questions About Required Documents</h3>
-      <p class="author">Jack</p>
-      <p class="time">7 hours ago</p>
-      <p class="question-content">
-        Lorem ipsum dolor sit amet consectetur. In diam adipiscing elit morbi.
-        Malesuada feugiat non tellus sagittis commodo sit. Ultrices phasellus et
-        est sagittis. Quis maecenas in laoreet fusce in gravida morbi. Sit id nunc
-        id est.
-      </p>
-      <div class="like-section">
-        <span class="like-icon">💙</span>
-        <span class="like-count">1.4k</span>
-      </div>
-    </div>
+    <!-- Article Section -->
+     <Article :tag="article.tag" 
+     :time="article.time" 
+     :title="article.title" 
+     :author="article.author"
+     :content="article.content"
+     :likes="article.likes"
+     />
     <!-- Comment Section -->
     <Comment />
 
   </div>
 </template>
-
-
-
-
 <style scoped>
 .container {
   padding: 20px;
@@ -54,53 +50,6 @@ import Comment from '@/components/Comment.vue';
   border: none;
   font-size: 18px;
 }
-
-.question-section {
-  margin-top: 10px;
-}
-
-.tag {
-  display: inline-block;
-  background-color: #e0ffe5;
-  color: #00c853;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.question-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.author, .time {
-  color: #888;
-  font-size: 14px;
-}
-
-.question-content {
-  margin-top: 10px;
-  font-size: 16px;
-  line-height: 1.4;
-}
-
-.like-section {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.like-icon {
-  font-size: 20px;
-}
-
-.like-count {
-  margin-left: 5px;
-  color: #888;
-  font-size: 14px;
-}
-
 .reply-count {
   margin-top: 20px;
   color: #888;
