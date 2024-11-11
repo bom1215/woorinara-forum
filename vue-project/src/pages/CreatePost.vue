@@ -2,9 +2,10 @@
 import { ref } from 'vue';
 
 const selectBoard = ref("")
+const header = ref("")
 const title = ref("")
-const description = ref("")
-
+const postContent= ref("")
+const header_option = ref(["visa","Banking and Finance","General Administrative", "ARC", "Phone","Housing and Living","School","Employment", "others"])
 // async function complete(){
 //   const url = "http://{{local}}/api/v1/forum/insert"
 //   let response = await fetch(url,{
@@ -37,14 +38,18 @@ const description = ref("")
         <option>Jobs</option>
       </select>
 
+      <select v-if="selectBoard=='QnA'" :class="{'header': selectBoard == 'QnA'}">
+        <option v-for="option in header_option">{{ option }}</option>
+      </select>
+
       <label class="label">Please enter the title.</label>
       <input v-model="title" class="title-input" placeholder="Enter title here" />
 
       <input
         type="text"
-        class="description-input"
+        class="postContent-input"
         placeholder="Ask any questions or stories you're curious about."
-        v-model="description"
+        v-model="postContent"
       />
     </div>
   </div>
@@ -87,7 +92,7 @@ const description = ref("")
   font-size: 16px;
 }
 
-.description {
+.postContent {
   color: #888;
   font-size: 14px;
 }
