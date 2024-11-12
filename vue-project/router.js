@@ -1,3 +1,4 @@
+import NestedReply from "@/components/NestedReply.vue";
 import CreatePost from "@/pages/CreatePost.vue";
 import Home from "@/pages/Home.vue";
 import Notice from "@/pages/Notice.vue";
@@ -14,6 +15,8 @@ const routes = [
     { path: '/post/jobs/:postid', component: Post },
     { path: '/notice/:userid', component: Notice},
     { path: '/search/:word', component: Search },
+    { path: '/comment/nestedReply', component: NestedReply },
+
     
     
     

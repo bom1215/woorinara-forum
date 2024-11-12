@@ -29,6 +29,7 @@ import Post from './pages/Post.vue';
     <RouterLink to="/post/jobs/1">Jobs_sameple_post</RouterLink>
     <RouterLink to="/notice/bombom12">Notice</RouterLink>
     <RouterLink to="/search/word">Search_sample</RouterLink>
+    <RouterLink to="/comment/nestedReply">NestedReply</RouterLink>
   </nav>
   <main>
     <RouterView />
