@@ -92,8 +92,10 @@ const header_option = ref(["visa","Banking and Finance","General Administrative"
   font-size: 16px;
 }
 
-.postContent {
+.postContent-input {
   color: #888;
   font-size: 14px;
+  width: 100%;
+  box-sizing: border-box; /* 패딩과 테두리를 포함하여 부모 요소 너비를 넘지 않도록 설정 */
 }
 </style>
