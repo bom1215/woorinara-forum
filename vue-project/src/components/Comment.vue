@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import ParentReply from './ParentReply.vue'
 
 const newReply = ref("")
 const replies = ref([
@@ -7,14 +8,6 @@ const replies = ref([
   { author: "Jack", time: "7 hours", content: "Lorem ipsum dolor Lorem ipsum dolor" },
 ])
 function addReply() {
-  if (newReply.value) {
-    replies.value.push({
-      author: "You",
-      time: "Just now",
-      content: newReply.value,
-    });
-    newReply.value = "";
-  }
 }
 </script>
 <template>
@@ -30,12 +23,12 @@ function addReply() {
 
     <!-- Reply List Section -->
     <div class="reply-list">
-      <div v-for="(reply, index) in replies" :key="index" class="reply-item">
-        <p class="reply-author">{{ reply.author }}</p>
-        <p class="reply-time">{{ reply.time }} ago</p>
-        <p class="reply-content">{{ reply.content }}</p>
-        <button class="reply-button">Reply</button>
-      </div>
+        <ParentReply
+        v-for="reply in replies"
+        :time = reply.time
+        :author = reply.author
+        :content = reply.content
+        />
     </div>
   </div>
 </template>
@@ -75,29 +68,5 @@ function addReply() {
 
 .reply-list {
   margin-top: 20px;
-}
-
-.reply-item {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.reply-author, .reply-time {
-  color: #888;
-  font-size: 14px;
-}
-
-.reply-content {
-  margin-top: 5px;
-  font-size: 16px;
-}
-
-.reply-button {
-  background: none;
-  color: #0066cc;
-  border: none;
-  font-size: 14px;
-  margin-top: 5px;
-  cursor: pointer;
 }
 </style>

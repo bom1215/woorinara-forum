@@ -6,22 +6,14 @@ const header = ref("")
 const title = ref("")
 const postContent= ref("")
 const header_option = ref(["visa","Banking and Finance","General Administrative", "ARC", "Phone","Housing and Living","School","Employment", "others"])
-// async function complete(){
-//   const url = "http://{{local}}/api/v1/forum/insert"
-//   let response = await fetch(url,{
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authentication' : process.env.ACESSTOKEN
-//     },
-//     body: JSON.stringify()
-//   })
-// }
 
+function complete (){
+}
 </script>
 <template>
   <div class="container">
     <!-- Header -->
-    <div class="header">
+    <div class="postHeader">
       <button class="back-button">
         <img alt="Cancel logo" src="../assets/cancel.svg" />
       </button>
@@ -31,8 +23,8 @@ const header_option = ref(["visa","Banking and Finance","General Administrative"
 
     <!-- Form Content -->
     <div class="form">
-      <label class="label">Select a Board</label>
       <select class="select-board" v-model="selectBoard">
+        <option value="" disabled selected>Select a Board</option>
         <option>General</option>
         <option>QnA</option>
         <option>Jobs</option>
@@ -42,8 +34,7 @@ const header_option = ref(["visa","Banking and Finance","General Administrative"
         <option v-for="option in header_option">{{ option }}</option>
       </select>
 
-      <label class="label">Please enter the title.</label>
-      <input v-model="title" class="title-input" placeholder="Enter title here" />
+      <input v-model="title" class="title-input" placeholder="Please enter the title." />
 
       <input
         type="text"
@@ -61,7 +52,7 @@ const header_option = ref(["visa","Banking and Finance","General Administrative"
   color: #333;
 }
 
-.header {
+.postHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -90,6 +81,7 @@ const header_option = ref(["visa","Banking and Finance","General Administrative"
   padding: 10px;
   margin-bottom: 15px;
   font-size: 16px;
+  border: none;
 }
 
 .postContent-input {
@@ -97,5 +89,9 @@ const header_option = ref(["visa","Banking and Finance","General Administrative"
   font-size: 14px;
   width: 100%;
   box-sizing: border-box; /* 패딩과 테두리를 포함하여 부모 요소 너비를 넘지 않도록 설정 */
+  border: none;
+}
+.header{
+  border: none;
 }
 </style>

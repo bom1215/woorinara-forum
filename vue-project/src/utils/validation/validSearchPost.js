@@ -1,4 +1,4 @@
-import yup from "yup";
+import * as yup from 'yup';
 // import { validatePostDetail } from "/readPostDetail.js";
 
 
@@ -16,16 +16,18 @@ const commentSchema = yup.object({
   ).required()
 });
 
+const forumHeaderSchema = yup.object({
+  name: yup.string().oneOf(['Visa', 'ARC', 'Phone', 'Banking and Finance', 'Employment', 'Housing and Living', 'School', 'General Administrative', 'Others']).required(),
+  color: yup.string().oneOf(['GREEN', 'BLUE']).required()
+}).nullable();
+
 // content (post 내용) 스키마 정의
 const postDetailSchema = yup.object({
   forumId: yup.number().positive().integer().required(), // 양의 정수
   title: yup.string().required(), // null 허용 안함
   content: yup.string().required(), // null 허용 안함
   commentList: yup.array().of(commentSchema).required(), // 댓글 리스트
-  forumHeader: yup
-    .mixed()
-    .nullable()
-    .oneOf(['Visa', 'ARC', 'Phone', 'Banking and Finance', 'Employment', 'Housing and Living', 'School', 'General Administrative', 'Others']),
+  forumHeader: forumHeaderSchema,
   forumCategory: yup
     .string()
     .oneOf(['General', 'QnA', 'Jobs'])

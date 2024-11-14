@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import { validatePostDetail } from "../utils/validation/validReadPostDetail.js"
 import { validateSearchPost } from "../utils/validation/validSearchPost.js"
 
@@ -61,6 +61,31 @@ export async function readPostDetail(forumId) {
     });
 }
 
+export async function readPostList(page, size) {
+  // dotenv.config();
+  const url = import.meta.env.VITE_POSTGENERAL + `/list?page=${page}&size=${size}`;
+  console.log("url: ",url)
+  await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+
+    },
+  }).then((response) => response.json())
+    .then((result) => {
+      if (result.status == 200) {
+        console.log("Response from readPostList:", result); 
+        console.log("Content in readPostList:",result.data.content)
+        validateSearchPost(result)
+        return result.data
+      } else {
+        console.error("Error occured in readPostList:",result)
+      }
+    })
+    .catch((error) => {
+      console.error("Error occured in readPostList:", error);
+    });
+}
 
 export async function searchPost(word, page, size) {
   dotenv.config();
@@ -167,7 +192,11 @@ export async function readLikes(forumId) {
     .then((result) => {
       if (result.status == 200) {
         console.log("Response from readLikes:", result); 
-        return result.data
+        if (isInteger(result.data)) {
+          return result.data
+        } else {
+          console.error("Likes are not integer. Likes: ",result.data)
+        }
       } else {
         console.error("Error occured in readLikes:",result)
       }
@@ -179,10 +208,10 @@ export async function readLikes(forumId) {
 
 
 // createPost("test_title", "test_content", "QnA", "Visa");
-// readPostDetail(23);
+// readPostDetail(20);
+// readPostList(0,)
+// searchPost("내용", 0, 20)
 
-searchPost("", 0, 10)
-
-// updatePost(1, "edited_title", "edited_content", "Visa")
-// deletePost(23)
+// updatePost(29, "edited_title", "edited_content", "Visa")
+// deletePost(29)
 // readLikes(1)

@@ -1,5 +1,7 @@
 <script setup>
 import "../assets/fonts/pretendard-jp.css";
+import Headers from "./Headers.vue";
+
 defineProps({
   tag: String,
   time: String,
@@ -7,12 +9,15 @@ defineProps({
   author: String,
   content: String,
   likes: String,
+  headerColor: String
 });
 </script>
 <template>
   <div class="post">
     <div class="header">
-      <span class="tag">{{ tag }}</span>
+      <Headers 
+    :text= tag
+    :color=headerColor />
       <span class="time">{{ time }}</span>
     </div>
     <h2 class="title">{{ title }}</h2>
@@ -28,7 +33,8 @@ defineProps({
 </template>
 <style scoped>
 .post {
-  background-color: #eff0f2;
+  /* width : fit-content; */
+  background-color: #FFFFFF;
   padding-top: 20px;
   padding-right: 24px;
   padding-bottom: 12px;
@@ -41,22 +47,11 @@ defineProps({
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.tag {
-  background-color: #e6f4ea;
-  color: #34c759;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .time {
-  color: #a0a0a0;
-  font-size: 0.75rem;
+  color: #929AA6;
+  font-size: 12px;
 }
 
 .title {
@@ -82,6 +77,7 @@ defineProps({
 .footer {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .likes {

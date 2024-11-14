@@ -1,4 +1,6 @@
 import dotenv from "dotenv";
+import { validateCommentList } from "../utils/validation/validReadCommentList.js"
+
 
 export async function createParentComment(forumId, content) {
   dotenv.config();
@@ -91,11 +93,11 @@ export async function updateComment(commentId, content) {
     });
 }
 
-export async function deleteComment(CommentId) {
+export async function deleteComment(commentId) {
   dotenv.config();
-  const url = process.env.COMMENTDELETE;
+  const url = process.env.COMMENTDELETE+`/${commentId}`;
   const requsetBody = {
-    CommentId: CommentId,
+    commentId: commentId,
   };
   await fetch(url, {
     method: "POST",
@@ -121,9 +123,37 @@ export async function deleteComment(CommentId) {
 }
 
 
+
+// contentList 없을 경우 빈 리스트 반환
+export async function readCommentList(commentId) {
+  dotenv.config();
+  const url = process.env.COMMENTGENERAL + `/${commentId}`;
+  await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+    },
+  }).then((response) => response.json())
+    .then((result) => {
+      if (result.status == 200) {
+        console.log("Response from readCommentList:", result); 
+        validateCommentList(result.data)
+        return result.data
+      } else {
+        console.error("Error occured in readCommentList:",result)
+      }
+    })
+    .catch((error) => {
+      console.error("Error occured in readCommentList:", error);
+    });
+}
+
+
 // createParentComment(1, "test_parent_comment"); //부모 댓글
 // createParentComment(1, 1,"test_child_comment"); // 자식 댓글
 
 
-updateComment(1, "test_updated_comment")
-// deleteComment(1)
+// updateComment(9, "test_updated_comment")
+// deleteComment(8)
+
+// readCommentList(1)

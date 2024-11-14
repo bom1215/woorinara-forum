@@ -1,4 +1,4 @@
-import yup from "yup"
+import * as yup from 'yup';
 
 // 댓글 구조에 대한 스키마 정의
 const commentSchema = yup.object({
@@ -14,16 +14,18 @@ const commentSchema = yup.object({
   ).required()
 });
 
+const forumHeaderSchema = yup.object({
+  name: yup.string().oneOf(['Visa', 'ARC', 'Phone', 'Banking and Finance', 'Employment', 'Housing and Living', 'School', 'General Administrative', 'Others']).required(),
+  color: yup.string().oneOf(['GREEN', 'BLUE']).required()
+}).nullable();
+
 // 상세조회 API 전체 데이터 스키마 정의
 const postDetailSchema = yup.object({
   forumId: yup.number().positive().integer().required(), // 양의 정수
   title: yup.string().required(), // null 허용 안함
   content: yup.string().required(), // null 허용 안함
   commentList: yup.array().of(commentSchema).required(), // 댓글 리스트
-  forumHeader: yup
-    .mixed()
-    .nullable()
-    .oneOf(['Visa', 'ARC', 'Phone', 'Banking and Finance', 'Employment', 'Housing and Living', 'School', 'General Administrative', 'Others']),
+  forumHeader: forumHeaderSchema,
   forumCategory: yup
     .string()
     .oneOf(['General', 'QnA', 'Jobs'])

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Card</title>
+  <style>
+    body {
+      font-family: 'Pretendard JP', sans-serif;
+      background-color: #12161D;
+      color: #272C33;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .post-card {
+      width: 390px;
+      padding: 20px 24px 12px;
+      background-color: #FFFFFF;
+      border-bottom: 4px solid #EFF0F2;
+      border-radius: 8px;
+      color: #12161D;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 3px 8px;
+      background-color: #EDFAF4;
+      border-radius: 8px;
+      color: #4BD092;
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #929AA6;
+      margin-left: auto;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #272C33;
+      margin: 10px 0 4px;
+    }
+
+    .author {
+      font-size: 12px;
+      color: #929AA6;
+    }
+
+    .content {
+      font-size: 16px;
+      line-height: 1.4;
+      color: #272C33;
+      margin: 10px 0;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      font-size: 12px;
+      color: #5C687A;
+    }
+
+    .footer .likes {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #5C687A;
+    }
+
+    .footer .likes img {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="post-card">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span class="badge">Visa</span>
+      <span class="time">7 hours ago</span>
+    </div>
+    <h3 class="title">Lorem ipsum dolor sit</h3>
+    <p class="author">Jack</p>
+    <p class="content">Lorem ipsum dolor sit amet consectetur. In diam adipiscing elit morbi. Malesuada feugiat non tellus sagittis commodo sit. Ultrices phasellus...</p>
+    <div class="footer">
+      <div class="likes">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Heart_coraz%C3%B3n.svg" alt="like-icon">
+        <span>1.4k</span>
+      </div>
+      <span>조회수 000회</span>
+    </div>
+  </div>
+</body>
+</html>
