@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #333;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #ddd;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .header .icon {
+      font-size: 24px;
+      color: #888;
+      cursor: pointer;
+    }
+    .header .completion {
+      font-size: 16px;
+      color: #888;
+    }
+    .content {
+      padding: 24px;
+    }
+    .select-board {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .select-board .text {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+    .instructions {
+      margin-top: 24px;
+      font-size: 16px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="icon">&#x2715;</span>
+    <span>Writing</span>
+    <span class="completion">Completion</span>
+  </div>
+
+  <div class="content">
+    <div class="select-board">
+      <div class="circle">Select a Board</div>
+      <span class="text">&#9662;</span>
+    </div>
+    <div class="instructions">
+      <p>Please enter the title.</p>
+      <p>Ask any questions or stories you're curious about.</p>
+    </div>
+  </div>
+</body>
+</html>
