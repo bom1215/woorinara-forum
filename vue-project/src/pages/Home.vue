@@ -1,45 +1,46 @@
 <script setup>
 import PostCard from "@/components/PostCard.vue";
 import { readPostList } from "@/services/postAPI.js";
-import { ref, onMounted } from "vue";
-const activeTab = ref("general");
-// const cards = ref([
-//   {
-//     id: 1,
-//     tag: "visa",
-//     time: "7 hours ago",
-//     title: "About D-2 visa",
-//     author: "zypher",
-//     content: "What kind of documents do I need to get D-2 visa",
-//     likes: "1.4k",
-//     headerColor: "BLUE"
-
-//   },
-//   {
-//     id: 2,
-//     tag: "visa",
-//     time:  "7 hours ago",
-//     title: "About D-2 visa",
-//     author: "zypher",
-//     content: "What kind of documents do I need to get D-2 visa",
-//     likes: "1.4k",
-//     headerColor: "GREEN"
-//   },
-// ])
+import { ref, onMounted, watch } from "vue";
+import { timeAgo } from "@/utils/timeCal/calculateTime";
+import { useRouter } from "vue-router";
+const activeTab = ref("General");
 const cards = ref(null);
-onMounted(async () => {
+
+async function fetchPosts(category) {
   const response = await readPostList(0, 10);
-  const result = response;
-  cards.value = result.content.map((item) => ({
-    id: item.forumId,
-    tag: item.forumHeader,
-    time: null,
-    author: null,
-    content: item.content,
-    likes: item.heartNum,
-    headerColor: item.forumHeader ? item.forumHeader.color : null, // forumHeader가 null일때는 null로 지정
-  }));
+  if (response) {
+    const result = response.content;
+    cards.value = result
+      .filter(item => item.forumCategory === category)
+      .map(item => ({
+        id: item.forumId,
+        title : item.title,
+        tag: item.forumHeader ? item.forumHeader.name : null,
+        time: timeAgo(item.updateAt),
+        author: item.nickName,
+        content: item.content,
+        likes: String(item.heartNum),
+        headerColor: item.forumHeader ? item.forumHeader.color : null
+      }));
+  }
+}
+
+// 초기 데이터 로드
+onMounted(() => {
+  fetchPosts("General");
 });
+
+// 탭 클릭 시 동작을 감지하여 fetchPosts 호출
+watch(activeTab, (newTab) => {
+  fetchPosts(newTab);
+});
+
+const router = useRouter(); 
+
+function createPost() {
+  router.push('/post/new');
+}
 </script>
 <template>
   <div class="container">
@@ -56,27 +57,27 @@ onMounted(async () => {
     <div class="tab-container">
       <button
         class="tab"
-        :class="{ 'active-tab': activeTab === 'general' }"
-        @click="activeTab = 'general'"
+        :class="{ 'active-tab': activeTab === 'General' }"
+        @click="activeTab = 'General'"
       >
         General
       </button>
       <button
         class="tab"
-        :class="{ 'active-tab': activeTab === 'qna' }"
-        @click="activeTab = 'qna'"
+        :class="{ 'active-tab': activeTab === 'QnA' }"
+        @click="activeTab = 'QnA'"
       >
         QnA
       </button>
       <button
         class="tab"
-        :class="{ 'active-tab': activeTab === 'jobs' }"
-        @click="activeTab = 'jobs'"
+        :class="{ 'active-tab': activeTab === 'Jobs' }"
+        @click="activeTab = 'Jobs'"
       >
         Jobs
       </button>
     </div>
-    <div v-if="result">
+    <div v-if="cards">
       <!-- Cards List -->
       <div class="cards-list">
         <PostCard
@@ -93,6 +94,13 @@ onMounted(async () => {
       </div>
     </div>
     <div v-else>Loading...</div>
+  <img
+      alt="add-icon"
+      class="add-icon"
+      src="../assets/createPost.svg"
+      @click="createPost"
+    />
+  
   </div>
 </template>
 
@@ -158,5 +166,14 @@ onMounted(async () => {
   flex-direction: column; /* 카드들이 세로로 배치될 경우 */
   gap: 16px; /*카드 간의 간격을 16px로 설정 */
   padding-top: 2%;
+}
+.add-icon {
+  position: fixed; /* 화면의 고정된 위치에 배치 */
+  bottom: 16px; /* 아래로부터 16px */
+  right: 16px; /* 오른쪽으로부터 16px */
+  width: 50px; /* 아이콘 크기 */
+  height: 50px;
+  cursor: pointer; /* 클릭 가능 */
+  z-index: 1000; /* 다른 요소 위에 배치 */
 }
 </style>

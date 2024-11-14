@@ -1,13 +1,48 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
+import { createPost } from "@/services/postAPI.js";
 
-const selectBoard = ref("")
-const header = ref("")
-const title = ref("")
-const postContent= ref("")
-const header_option = ref(["visa","Banking and Finance","General Administrative", "ARC", "Phone","Housing and Living","School","Employment", "others"])
+const selectBoard = ref("");
+const header = ref("");
+const title = ref("");
+const postContent = ref(" ");
+const header_option = ref([
+  "visa",
+  "Banking and Finance",
+  "General Administrative",
+  "ARC",
+  "Phone",
+  "Housing and Living",
+  "School",
+  "Employment",
+  "others",
+]);
 
-function complete (){
+function resize(event) {
+  const element = event.target;
+  element.style.height = "18px"; // 초기 높이 설정
+  element.style.height = `${element.scrollHeight}px`; // 내용에 맞게 높이 설정
+}
+async function complete() {
+  // 필수 입력값 확인
+  if (!title.value || !postContent.value || !selectBoard.value) {
+    console.error("All fields are required.");
+    return;
+  }
+
+  // 게시글 생성 함수 호출
+  try {
+    await createPost(
+      title.value,
+      postContent.value,
+      selectBoard.value,
+      selectBoard.value === "QnA" ? header.value : null // QnA가 아니면 header를 null로 설정
+    );
+    console.log("Post created successfully");
+    // 필요한 경우, 성공 후 다른 페이지로 이동하거나 상태를 초기화하는 로직 추가
+  } catch (error) {
+    console.error("Error occurred while creating the post:", error);
+  }
 }
 </script>
 <template>
@@ -30,17 +65,26 @@ function complete (){
         <option>Jobs</option>
       </select>
 
-      <select v-if="selectBoard=='QnA'" :class="{'header': selectBoard == 'QnA'}">
+      <select
+        v-if="selectBoard == 'QnA'"
+        :class="{ header: selectBoard == 'QnA' }"
+      >
         <option v-for="option in header_option">{{ option }}</option>
       </select>
 
-      <input v-model="title" class="title-input" placeholder="Please enter the title." />
-
-      <input
-        type="text"
+      <textarea
+        v-model="title"
+        @input="resize"
+        class="title-input"
+        placeholder="Please enter the title."
+        maxlength="300"
+      />
+      <textarea
+        v-model="postContent"
+        @input="resize"
         class="postContent-input"
         placeholder="Ask any questions or stories you're curious about."
-        v-model="postContent"
+        maxlength="2000"
       />
     </div>
   </div>
@@ -85,13 +129,13 @@ function complete (){
 }
 
 .postContent-input {
-  color: #888;
+  color: #090909;
   font-size: 14px;
   width: 100%;
   box-sizing: border-box; /* 패딩과 테두리를 포함하여 부모 요소 너비를 넘지 않도록 설정 */
   border: none;
 }
-.header{
+.header {
   border: none;
 }
 </style>

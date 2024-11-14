@@ -1,10 +1,8 @@
-import dotenv from "dotenv";
 import { validateCommentList } from "../utils/validation/validReadCommentList.js"
 
 
 export async function createParentComment(forumId, content) {
-  dotenv.config();
-  const url = process.env.COMMENTCREATE;
+  const url = import.meta.env.VITE_COMMENTCREATE;
   const requsetBody = {
     forumId: forumId,
     content: content,
@@ -13,7 +11,7 @@ export async function createParentComment(forumId, content) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -33,8 +31,7 @@ export async function createParentComment(forumId, content) {
 }
 
 export async function createChildComment(forumId, parentCommentId, content) {
-  dotenv.config();
-  const url = process.env.COMMENTCREATE;
+  const url = import.meta.env.VITE_COMMENTCREATE;
   const requsetBody = {
     forumId: forumId,
     parentCommentId: parentCommentId,
@@ -44,7 +41,7 @@ export async function createChildComment(forumId, parentCommentId, content) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -64,8 +61,7 @@ export async function createChildComment(forumId, parentCommentId, content) {
 }
 
 export async function updateComment(commentId, content) {
-  dotenv.config();
-  const url = process.env.COMMENTUPDATE;
+  const url = import.meta.env.VITE_COMMENTUPDATE;
   const requsetBody = {
     commentId: commentId,
     content: content,
@@ -74,7 +70,7 @@ export async function updateComment(commentId, content) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -94,8 +90,7 @@ export async function updateComment(commentId, content) {
 }
 
 export async function deleteComment(commentId) {
-  dotenv.config();
-  const url = process.env.COMMENTDELETE+`/${commentId}`;
+  const url = import.meta.env.VITE_COMMENTDELETE+`/${commentId}`;
   const requsetBody = {
     commentId: commentId,
   };
@@ -103,7 +98,7 @@ export async function deleteComment(commentId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -126,12 +121,11 @@ export async function deleteComment(commentId) {
 
 // contentList 없을 경우 빈 리스트 반환
 export async function readCommentList(commentId) {
-  dotenv.config();
-  const url = process.env.COMMENTGENERAL + `/${commentId}`;
+  const url = import.meta.env.VITE_COMMENTGENERAL + `/${commentId}`;
   await fetch(url, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
   }).then((response) => response.json())
     .then((result) => {

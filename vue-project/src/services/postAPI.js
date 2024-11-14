@@ -1,10 +1,8 @@
-// import dotenv from "dotenv";
 import { validatePostDetail } from "../utils/validation/validReadPostDetail.js"
 import { validateSearchPost } from "../utils/validation/validSearchPost.js"
 
 export async function createPost(title, content, forumCategory, header) {
-  dotenv.config();
-  const url = process.env.POSTCREATE;
+  const url = import.meta.env.VITE_POSTCREATE;
   if (forumCategory != "QnA") {
     header = null;
   }
@@ -18,7 +16,7 @@ export async function createPost(title, content, forumCategory, header) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -39,12 +37,11 @@ export async function createPost(title, content, forumCategory, header) {
 
 // contentList 없을 경우 빈 리스트 반환
 export async function readPostDetail(forumId) {
-  dotenv.config();
-  const url = process.env.POSTGENERAL + `/${forumId}`;
+  const url = import.meta.env.VITE_POSTGENERAL + `/${forumId}`;
   await fetch(url, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
   }).then((response) => response.json())
     .then((result) => {
@@ -62,38 +59,40 @@ export async function readPostDetail(forumId) {
 }
 
 export async function readPostList(page, size) {
-  // dotenv.config();
   const url = import.meta.env.VITE_POSTGENERAL + `/list?page=${page}&size=${size}`;
-  console.log("url: ",url)
+  console.log("url: ", url);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (result.status === 200) {
+      console.log("Response from readPostList:", result); 
+      console.log("Content in readPostList:", result.data.content);
+      validateSearchPost(result);
+      return result.data;  // 함수의 끝에서 result.data 반환
+    } else {
+      console.error("Error occurred in readPostList:", result);
+      return null;  // 에러 발생 시 null 반환
+    }
+  } catch (error) {
+    console.error("Error occurred in readPostList:", error);
+    return null;  // 네트워크 에러 발생 시 null 반환
+  }
+}
+
+export async function searchPost(word, page, size) {
+  const url = import.meta.env.VITE_POSTGENERAL + `/list?word=${word}&page=${page}&size=${size}`;
   await fetch(url, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-
-    },
-  }).then((response) => response.json())
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from readPostList:", result); 
-        console.log("Content in readPostList:",result.data.content)
-        validateSearchPost(result)
-        return result.data
-      } else {
-        console.error("Error occured in readPostList:",result)
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in readPostList:", error);
-    });
-}
-
-export async function searchPost(word, page, size) {
-  dotenv.config();
-  const url = process.env.POSTGENERAL + `/list?word=${word}&page=${page}&size=${size}`;
-  await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
     },
   }).then((response) => response.json())
     .then((result) => {
@@ -101,7 +100,7 @@ export async function searchPost(word, page, size) {
         console.log("Response from searchPost:", result); 
         console.log("Content in search:",result.data.content)
         validateSearchPost(result)
-        return result.data
+        return result.data;
       } else {
         console.error("Error occured in searchPost:",result)
       }
@@ -114,8 +113,7 @@ export async function searchPost(word, page, size) {
 
 
 export async function updatePost(forumId, title, content, header) {
-  dotenv.config();
-  const url = process.env.POSTUPDATE;
+  const url = import.meta.env.VITE_POSTUPDATE;
   const requsetBody = {
     forumId: forumId,
     title: title,
@@ -126,7 +124,7 @@ export async function updatePost(forumId, title, content, header) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -146,8 +144,7 @@ export async function updatePost(forumId, title, content, header) {
 }
 
 export async function deletePost(forumId) {
-  dotenv.config();
-  const url = process.env.POSTDELETE;
+  const url = import.meta.env.VITE_POSTDELETE;
   const requsetBody = {
     forumId: forumId,
   };
@@ -155,7 +152,7 @@ export async function deletePost(forumId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -176,8 +173,7 @@ export async function deletePost(forumId) {
 
 
 export async function readLikes(forumId) {
-  dotenv.config();
-  const url = process.env.POSTLIKES;
+  const url = import.meta.env.VITE_POSTLIKES;
   const requsetBody = {
     forumId: forumId,
   };
@@ -185,7 +181,7 @@ export async function readLikes(forumId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.ACCESSTOKEN}`,
+      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
     },
     body: JSON.stringify(requsetBody),
   }).then((response) => response.json())
