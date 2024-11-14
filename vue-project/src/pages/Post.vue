@@ -9,6 +9,7 @@ const article = ref({
   author: "zypher",
   content: "Lorem ipsum dolor sit amet consectetur. In diam adipiscing elit morbi. Malesuada feugiat non tellus sagittis commodo sit. Ultrices phasellus etest sagittis. Quis maecenas in laoreet fusce in gravida morbi. Sit id nuncid est.",
   likes: "1.4k",
+  headerColor: "blue"
 })
 </script>
 <template>
@@ -26,6 +27,7 @@ const article = ref({
      :author="article.author"
      :content="article.content"
      :likes="article.likes"
+     :headerColor="article.headerColor"
      />
     <!-- Comment Section -->
     <Comment />

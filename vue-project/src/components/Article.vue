@@ -1,5 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
+import Headers from "./Headers.vue";
+
 defineProps({
   tag: String,
   time: String,
@@ -7,6 +9,7 @@ defineProps({
   author: String,
   content: String,
   likes: String,
+  headerColor: String
 });
 const showOptions = ref(false);
 function toggleOptions() {
@@ -16,9 +19,12 @@ function toggleOptions() {
 <template>
   <!-- Question Section -->
   <div class="post">
-    <div class="tag">{{ tag }}</div>
-        <!-- Title Section with Options -->
-        <div class="title-section">
+    <!-- <div class="tag">{{ tag }}</div> -->
+    <Headers 
+    :text= tag
+    :color=headerColor />
+    <!-- Title Section with Options -->
+    <div class="title-section">
       <h3 class="title">{{ title }}</h3>
       <span class="options-button" @click="toggleOptions">⋮</span>
       <div v-if="showOptions" class="options-menu">
@@ -28,13 +34,12 @@ function toggleOptions() {
     </div>
     <p class="author">{{ author }}</p>
     <p class="time">{{ time }}</p>
-    <p class="content">{{ content }}
-    </p>
+    <p class="content">{{ content }}</p>
     <div class="like-section">
       <!-- <span class="like-icon">💙</span>
       <span class="like-count">{{ likes }}</span> -->
-        <img alt="like-icon" class="likes svg" src="../assets/like.svg" />
-        <span class="likes">
+      <img alt="like-icon" class="likes svg" src="../assets/like.svg" />
+      <span class="likes">
         {{ likes }}
       </span>
     </div>
@@ -92,7 +97,8 @@ function toggleOptions() {
   background-color: #f0f0f0;
 }
 
-.author, .time {
+.author,
+.time {
   color: #888;
   font-size: 14px;
 }

@@ -4,6 +4,7 @@ import Home from "@/pages/Home.vue";
 import Notice from "@/pages/Notice.vue";
 import Post from "@/pages/Post.vue";
 import Search from "@/pages/Search.vue";
+import Headers from "@/components/Headers.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 
@@ -16,6 +17,8 @@ const routes = [
     { path: '/notice/:userid', component: Notice},
     { path: '/search/:word', component: Search },
     { path: '/comment/nestedReply', component: NestedReply },
+    { path: '/headers', component: Headers },
+    
 
     
     
