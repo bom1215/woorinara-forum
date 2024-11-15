@@ -1,9 +1,14 @@
 <script setup>
+import ChildReply from './ChildReply.vue';
 
 defineProps({
   time: String,
   author: String,
   content: String,
+  childList: {
+    type: Array,
+    default: () => [],
+  }
 });
 
 </script>
@@ -18,12 +23,21 @@ defineProps({
     </div>
     <p class="content"> {{ content }}</p>
     <a href="#" class="reply-link">Reply</a>
+    <div class="child-replies">
+      <ChildReply
+        v-for="child in childList"
+        :key="child.commentId"
+        :time="child.updatedAt"
+        :author="child.memberName"
+        :content="child.content"
+      />
+    </div>
   </div>
 </template>
 <style scoped>
 .comment {
   padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
+  /* border-bottom: 1px solid #e0e0e0; */
   font-family: Arial, sans-serif;
 }
 

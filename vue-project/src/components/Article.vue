@@ -9,7 +9,8 @@ defineProps({
   author: String,
   content: String,
   likes: String,
-  headerColor: String
+  headerColor: String,
+  forumCategory: String
 });
 const showOptions = ref(false);
 function toggleOptions() {
@@ -21,7 +22,7 @@ function toggleOptions() {
   <!-- Question Section -->
   <div class="post">
     <div class="header">
-      <Headers :text="tag" :color="headerColor" />
+      <Headers v-if="forumCategory === 'QnA'" :text="tag" :color="headerColor" />
       <span class="time">{{ time }}</span>
     </div>
     <!-- Title Section with Options -->

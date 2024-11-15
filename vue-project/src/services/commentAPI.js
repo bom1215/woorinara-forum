@@ -3,32 +3,36 @@ import { validateCommentList } from "../utils/validation/validReadCommentList.js
 
 export async function createParentComment(forumId, content) {
   const url = import.meta.env.VITE_COMMENTCREATE;
-  const requsetBody = {
-    forumId: forumId,
+  const requestBody = {
+    forumId: parseInt(forumId),
     content: content,
   };
-  await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-    },
-    body: JSON.stringify(requsetBody),
-  })
-    .then((response) => {
-      return response.json(); // 응답 Body를 한 번만 읽을 수 있음.
-    })
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from createParentComment API:", result);
-      } else {
-        console.error("Error occured in createParentComment:", result);
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in createParentComment:", error);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      },
+      body: JSON.stringify(requestBody),
     });
+
+    const result = await response.json();
+
+    if (response.ok && result.status === 200) {
+      console.log("Response from createParentComment API:", result);
+      return result; // 성공적으로 처리된 데이터를 반환
+    } else {
+      console.error("Error occurred in createParentComment:", result);
+      return null; // 에러 발생 시 null 반환
+    }
+  } catch (error) {
+    console.error("Error occurred in createParentComment:", error);
+    return null; // 네트워크 에러 발생 시 null 반환
+  }
 }
+
 
 export async function createChildComment(forumId, parentCommentId, content) {
   const url = import.meta.env.VITE_COMMENTCREATE;

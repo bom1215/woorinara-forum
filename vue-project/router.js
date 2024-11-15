@@ -11,9 +11,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
     { path: '/', component: Home },
     { path: '/post/new', component: CreatePost },
-    { path: '/post/qna/:postid', component: Post },
-    { path: '/post/general/:postid', component: Post},
-    { path: '/post/jobs/:postid', component: Post },
+    { path: '/post/:forumCategory/:forumId', component: Post },
     { path: '/notice/:userid', component: Notice},
     { path: '/search/:word', component: Search },
     { path: '/comment/childReply', component: ChildReply },

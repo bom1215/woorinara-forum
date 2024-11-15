@@ -1,37 +1,147 @@
 <script setup>
-import Comment from '@/components/Comment.vue';
-import Article from '@/components/Article.vue';
-import { ref } from 'vue';
-const article = ref({
-  tag: "Visa",
-  time: "7시간 전",
-  title: "Questions About Required Documents",
-  author: "zypher",
-  content: "Lorem ipsum dolor sit amet consectetur. In diam adipiscing elit morbi. Malesuada feugiat non tellus sagittis commodo sit. Ultrices phasellus etest sagittis. Quis maecenas in laoreet fusce in gravida morbi. Sit id nuncid est.",
-  likes: "1.4k",
-  headerColor: "green"
-})
+import Comment from "@/components/Comment.vue";
+import Article from "@/components/Article.vue";
+import { ref, onMounted } from "vue";
+import { readPostDetail } from "@/services/postAPI.js";
+import { timeAgo } from "@/utils/timeCal/calculateTime";
+import { useRoute } from 'vue-router';
+import CommentInput from "@/components/CommentInput.vue";
+
+// const article = ref({
+//   tag: "Visa",
+//   time: "7시간 전",
+//   title: "Questions About Required Documents",
+//   author: "zypher",
+//   content: "Lorem ipsum dolor sit amet consectetur. In diam adipiscing elit morbi. Malesuada feugiat non tellus sagittis commodo sit. Ultrices phasellus etest sagittis. Quis maecenas in laoreet fusce in gravida morbi. Sit id nuncid est.",
+//   likes: "1.4k",
+//   headerColor: "green",
+//   forumHeader: "QnA",
+//   commentList: [
+//             {
+//                 "commentId": 5,
+//                 "memberId": 32,
+//                 "memberName": "leeseokwoon5",
+//                 "parentCommentId": null,
+//                 "content": "This is Parent Comment",
+//                 "createdAt": "2024-11-11T21:34:43.39316",
+//                 "updatedAt": "2024-11-11T21:34:43.39316",
+//                 "childList": [
+//                     {
+//                         "commentId": 6,
+//                         "memberId": 32,
+//                         "memberName": "leeseokwoon5",
+//                         "parentCommentId": 5,
+//                         "content": "This is Child Comment1",
+//                         "createdAt": "2024-11-11T21:36:05.16010",
+//                         "updatedAt": "2024-11-11T21:36:05.16010",
+//                         "childList": []
+//                     },
+//                     {
+//                         "commentId": 8,
+//                         "memberId": 32,
+//                         "memberName": "leeseokwoon5",
+//                         "parentCommentId": 5,
+//                         "content": "This is Child Comment1",
+//                         "createdAt": "2024-11-11T22:01:41.60572",
+//                         "updatedAt": "2024-11-11T22:01:41.60572",
+//                         "childList": []
+//                     }
+//                 ]
+//             },
+//             {
+//                 "commentId": 7,
+//                 "memberId": 32,
+//                 "memberName": "leeseokwoon5",
+//                 "parentCommentId": null,
+//                 "content": "This is Parent Comment",
+//                 "createdAt": "2024-11-11T22:01:28.41458",
+//                 "updatedAt": "2024-11-11T22:01:28.41458",
+//                 "childList": [
+//                     {
+//                         "commentId": 9,
+//                         "memberId": 32,
+//                         "memberName": "leeseokwoon5",
+//                         "parentCommentId": 7,
+//                         "content": "This is Child Comment1",
+//                         "createdAt": "2024-11-11T22:01:50.68713",
+//                         "updatedAt": "2024-11-11T22:01:50.68713",
+//                         "childList": []
+//                     }
+//                 ]
+//             }
+//         ],
+
+// })
+const postContent = ref(null);
+async function fetchPosts(forumId) {
+  const response = await readPostDetail(forumId);
+  console.log(response)
+  if (response) {
+    postContent.value = {
+      forumId: response.forumId,
+      title: response.title,
+      content: response.content,
+      forumCategory: response.forumCategory,
+      tag: response.forumHeader ? response.forumHeader.name : null,
+      headerColor: response.forumHeader ? response.forumHeader.color : null,
+      time: timeAgo(response.updateAt),
+      author: response.nickName,
+      likes: String(response.heartNum),
+      commentList: response.commentList,
+    };
+    console.log(postContent);
+
+  }
+}
+const route = useRoute(); // 라우터 정보 가져오기
+
+onMounted(() => {
+  const id  = route.params.forumId; // 라우터 파라미터에서 id 가져오기
+  fetchPosts(id);
+});
+
+
+// const commentKey = ref(0); // Unique key for the Comment component
+// function forceReRender() {
+//   commentKey.value++; // Increment key to trigger re-render
+// }
+
 </script>
 <template>
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <button class="back-button">⬅️</button>
+      <button class="back-button">
+        <img alt="Back logo" src="../assets/back.svg" />
+      </button>
       <h2>QnA</h2>
     </div>
+    <div v-if="postContent">
+      <!-- Article Section -->
+      <Article 
+        :tag="postContent.tag"
+        :time="postContent.time"
+        :title="postContent.title"
+        :author="postContent.author"
+        :content="postContent.content"
+        :likes="postContent.likes"
+        :headerColor="postContent.headerColor"
+        :forumCategory="postContent.forumHeader"
+      />
+      <!-- Comment Section -->
+      <div v-if="postContent.commentList.length > 0" >
+        <Comment
+          :replies="postContent.commentList"
+          :forumId="postContent.forumId" 
+          />
+      </div>
+      <div v-if="postContent.commentList.length === 0" >
+        <CommentInput
+        :forumId="postContent.forumId"/>
+      </div>
 
-    <!-- Article Section -->
-     <Article :tag="article.tag" 
-     :time="article.time" 
-     :title="article.title" 
-     :author="article.author"
-     :content="article.content"
-     :likes="article.likes"
-     :headerColor="article.headerColor"
-     />
-    <!-- Comment Section -->
-    <Comment />
 
+    </div>
   </div>
 </template>
 <style scoped>
@@ -88,7 +198,8 @@ const article = ref({
   border-bottom: 1px solid #eee;
 }
 
-.reply-author, .reply-time {
+.reply-author,
+.reply-time {
   color: #888;
   font-size: 14px;
 }

@@ -16,16 +16,14 @@ defineProps({
       <div class="cancel">
         <img src="@/assets/cancel.svg" alt="cancel icon" />
         </div>
-
     </div>
     <p class="content"> {{ content }}</p>
-    <a href="#" class="reply-link">Reply</a>
   </div>
 </template>
 <style scoped>
 .comment {
   padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
+  /* border-top: 1px solid #e0e0e0; */
   font-family: Arial, sans-serif;
 }
 
@@ -51,17 +49,8 @@ defineProps({
   margin: 8px 0;
   color: #272c33;
   font-size: 16px;
-}
+  padding-left: 30px; 
 
-.reply-link {
-  color: #3b8aff;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.reply-link:hover {
-  text-decoration: underline;
 }
 .cancel {
   margin-left: auto;

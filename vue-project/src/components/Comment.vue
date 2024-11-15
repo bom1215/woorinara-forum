@@ -1,13 +1,35 @@
 <script setup>
 import { ref } from 'vue';
 import ParentReply from './ParentReply.vue'
+import { createParentComment } from '@/services/commentAPI';
 
 const newReply = ref("")
-const replies = ref([
-  { author: "TTtttt", time: "7 hours", content: "Lorem ipsum dolor Lorem ipsum dolor" },
-  { author: "Jack", time: "7 hours", content: "Lorem ipsum dolor Lorem ipsum dolor" },
-])
-function addReply() {
+const props = defineProps({
+  replies: {
+    type: Array,
+    required: true
+  },
+  forumId: String,
+})
+
+async function addReply() {
+  // 댓글 내용이 비어있지 않은 경우만 처리
+  if (newReply.value.trim() === "") {
+    alert("Reply cannot be empty!");
+    return;
+  }
+  
+  // 새로운 댓글 추가 API 호출
+  createParentComment(props.forumId, newReply.value)
+    .then((result) => {
+      if (result) {
+        // 입력 필드 비우기
+        newReply.value = "";
+      }
+    })
+    .catch((error) => {
+      console.error("Error adding reply:", error);
+    });
 }
 </script>
 <template>
@@ -25,9 +47,10 @@ function addReply() {
     <div class="reply-list">
         <ParentReply
         v-for="reply in replies"
-        :time = reply.time
-        :author = reply.author
-        :content = reply.content
+        :time = "reply.updatedAt"
+        :author = "reply.memberName"
+        :content = "reply.content"
+        :childList = "reply.childList"
         />
     </div>
   </div>

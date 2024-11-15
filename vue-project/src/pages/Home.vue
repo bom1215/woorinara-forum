@@ -14,14 +14,15 @@ async function fetchPosts(category) {
     cards.value = result
       .filter(item => item.forumCategory === category)
       .map(item => ({
-        id: item.forumId,
+        forumId: item.forumId,
         title : item.title,
         tag: item.forumHeader ? item.forumHeader.name : null,
         time: timeAgo(item.updateAt),
         author: item.nickName,
         content: item.content,
         likes: String(item.heartNum),
-        headerColor: item.forumHeader ? item.forumHeader.color : null
+        headerColor: item.forumHeader ? item.forumHeader.color : null,
+        forumCategory: item.forumCategory
       }));
   }
 }
@@ -82,14 +83,15 @@ function createPost() {
       <div class="cards-list">
         <PostCard
           v-for="card in cards"
-          :key="card.id"
+          :forumId="card.forumId"
           :tag="card.tag"
           :time="card.time"
           :title="card.title"
           :author="card.author"
           :content="card.content"
           :likes="card.likes"
-          :header-color="card.headerColor"
+          :headerColor="card.headerColor"
+          :forumCategory="card.forumCategory"
         />
       </div>
     </div>

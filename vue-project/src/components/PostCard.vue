@@ -1,26 +1,37 @@
 <script setup>
 import "../assets/fonts/pretendard-jp.css";
 import Headers from "./Headers.vue";
+import { useRouter } from "vue-router";
 
-defineProps({
+const props = defineProps({
+  forumId: String,
   tag: String,
   time: String,
   title: String,
   author: String,
   content: String,
   likes: String,
-  headerColor: String
+  headerColor: String,
+  forumCategory: String
 });
+const router = useRouter(); 
+
+function navigateToPost(){
+  router.push(`/post/${props.forumCategory}/${props.forumId}`);
+}
 </script>
 <template>
-  <div class="post">
-    <div class="header">
+  <div class="post" @click="navigateToPost">
+    <div v-if="forumCategory === 'QnA'" class="header">
       <Headers 
     :text= tag
     :color=headerColor />
       <span class="time">{{ time }}</span>
     </div>
-    <h2 class="title">{{ title }}</h2>
+    <h2 class="title">{{ title }}
+      <span v-if="forumCategory !== 'QnA'" class="time">{{ time }}</span>
+    </h2>
+    
     <p class="author">{{ author }}</p>
     <p class="content">{{ content }}</p>
     <div class="footer">
@@ -59,6 +70,8 @@ defineProps({
   font-weight: bold;
   color: #12161d;
   margin: 8px 0;
+  justify-content: space-between;
+  display: flex;
 }
 
 .author {

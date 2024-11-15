@@ -35,28 +35,33 @@ export async function createPost(title, content, forumCategory, header) {
     });
 }
 
-// contentList 없을 경우 빈 리스트 반환
 export async function readPostDetail(forumId) {
   const url = import.meta.env.VITE_POSTGENERAL + `/${forumId}`;
-  await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-    },
-  }).then((response) => response.json())
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from readPostDetail:", result); 
-        validatePostDetail(result.data)
-        return result.data
-      } else {
-        console.error("Error occured in readPostDetail:",result)
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in readPostDetail:", error);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      },
     });
+
+    const result = await response.json();
+
+    if (result.status === 200) {
+      console.log("Response from readPostDetail:", result);
+      validatePostDetail(result.data);
+      return result.data; // 정상적으로 데이터를 반환
+    } else {
+      console.error("Error occurred in readPostDetail:", result);
+      return null; // 에러 발생 시 null 반환
+    }
+  } catch (error) {
+    console.error("Error occurred in readPostDetail:", error);
+    return null; // 네트워크 에러 발생 시 null 반환
+  }
 }
+
 
 export async function readPostList(page, size) {
   const url = import.meta.env.VITE_POSTGENERAL + `/list?page=${page}&size=${size}`;
