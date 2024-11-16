@@ -4,7 +4,7 @@ import * as yup from 'yup';
 const commentSchema = yup.object({
   commentId: yup.number().positive().integer().required(),
   memberId: yup.number().positive().integer().required(),
-  memberName: yup.string().required(),
+  nickName: yup.string().required(),
   parentCommentId: yup.number().nullable(), // null이 허용되는 경우
   content: yup.string().required(),
   createdAt: yup.string().required(), // ISO 형식 문자열로 가정
@@ -52,7 +52,7 @@ export async function validatePostDetail(data) {
 //     {
 //       commentId: 5,
 //       memberId: 32,
-//       memberName: "leeseokwoon5",
+//       nickName: "leeseokwoon5",
 //       parentCommentId: null,
 //       content: "This is Parent Comment",
 //       createdAt: "2024-11-11T21:34:43.39316",
@@ -61,7 +61,7 @@ export async function validatePostDetail(data) {
 //         {
 //           commentId: 6,
 //           memberId: 32,
-//           memberName: "leeseokwoon5",
+//           nickName: "leeseokwoon5",
 //           parentCommentId: 5,
 //           content: "This is Child Comment1",
 //           createdAt: "2024-11-11T21:36:05.16010",
@@ -71,7 +71,7 @@ export async function validatePostDetail(data) {
 //         {
 //           commentId: 8,
 //           memberId: 32,
-//           memberName: "leeseokwoon5",
+//           nickName: "leeseokwoon5",
 //           parentCommentId: 5,
 //           content: "This is Child Comment1",
 //           createdAt: "2024-11-11T22:01:41.60572",
@@ -83,7 +83,7 @@ export async function validatePostDetail(data) {
 //     {
 //       commentId: 7,
 //       memberId: 32,
-//       memberName: "leeseokwoon5",
+//       nickName: "leeseokwoon5",
 //       parentCommentId: null,
 //       content: "This is Parent Comment",
 //       createdAt: "2024-11-11T22:01:28.41458",
@@ -92,7 +92,7 @@ export async function validatePostDetail(data) {
 //         {
 //           commentId: 9,
 //           memberId: 32,
-//           memberName: "leeseokwoon5",
+//           nickName: "leeseokwoon5",
 //           parentCommentId: 7,
 //           content: "This is Child Comment1",
 //           createdAt: "2024-11-11T22:01:50.68713",

@@ -1,17 +1,27 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-const comment = ref("");
-function clearComment() {
-    comment.value = ""
+import { ref, onMounted } from 'vue';
+import PostList from "@/components/PostList.vue";
+
+
+function clearinput() {
+    input.value = ""
 };
-// 페이지 로드 시 입력 필드에 포커스
-const inputRef = ref("");
-onMounted(async () => {
-    await nextTick();
-    if (inputRef.value) {
-        inputRef.value.focus();
-    }
-});
+
+const input = ref(""); // 검색 입력값
+const searchWord =ref(null) // 실제 검색된 값
+const currentPage = ref(0); // 현재 페이지
+const pageSize = ref(20); // 페이지 크기
+
+async function fetchSearchPosts() {
+  // 입력값 앞뒤 공백 제거
+  if (input.value.trim()) {
+    console.log("Searching for:", input.value.trim());
+    searchWord.value = input.value
+  } else {
+    console.warn("Search input is empty.");
+  }
+}
+
 </script>
 <template>
   <div class="container">
@@ -20,11 +30,17 @@ onMounted(async () => {
       <input
         ref = "inputref"
         type="text"
-        v-model="comment"
-        placeholder="Please enter a comment."
+        v-model="input"
+        placeholder="Please enter a input."
+        @keyup.enter="fetchSearchPosts"
       />
-      <button v-if="comment" class="clear-btn" @click="clearComment">✕</button>
+      <button v-if="input" class="clear-btn" @click="clearinput">✕</button>
     </div>
+    <PostList
+    v-if="searchWord"
+    :word="searchWord"
+    :page="currentPage"
+    :size="pageSize"/>
   </div>
 </template>
 <style scoped>

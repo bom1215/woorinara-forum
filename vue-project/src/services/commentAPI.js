@@ -124,27 +124,32 @@ export async function deleteComment(commentId) {
 
 
 // contentList 없을 경우 빈 리스트 반환
-export async function readCommentList(commentId) {
-  const url = import.meta.env.VITE_COMMENTGENERAL + `/${commentId}`;
-  await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-    },
-  }).then((response) => response.json())
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from readCommentList:", result); 
-        validateCommentList(result.data)
-        return result.data
-      } else {
-        console.error("Error occured in readCommentList:",result)
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in readCommentList:", error);
+export async function readCommentList(forumId) {
+  const url = import.meta.env.VITE_COMMENTGENERAL + `/${forumId}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      },
     });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      console.log("Response from readCommentList:", result);
+      validateCommentList(result.data); // 데이터 유효성 검증
+      return result.data; // 댓글 데이터 반환
+    } else {
+      console.error("Error occurred in readCommentList:", result);
+      return []; // 에러 시 빈 배열 반환
+    }
+  } catch (error) {
+    console.error("Error occurred in readCommentList:", error);
+    return []; // 네트워크 에러 시 빈 배열 반환
+  }
 }
+
 
 
 // createParentComment(1, "test_parent_comment"); //부모 댓글

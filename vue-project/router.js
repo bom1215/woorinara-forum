@@ -6,7 +6,7 @@ import Post from "@/pages/Post.vue";
 import Search from "@/pages/Search.vue";
 import Headers from "@/components/Headers.vue";
 import { createRouter, createWebHistory } from "vue-router";
-
+import Modal from "@/components/shared/modal.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -16,6 +16,8 @@ const routes = [
     { path: '/search/:word', component: Search },
     { path: '/comment/childReply', component: ChildReply },
     { path: '/headers', component: Headers },
+    { path: '/modal', component: Modal }
+
     
 
     

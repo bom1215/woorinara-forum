@@ -31,6 +31,8 @@ import Post from './pages/Post.vue';
     <RouterLink to="/search/word">Search_sample</RouterLink>
     <RouterLink to="/comment/childReply">ChildReply</RouterLink>
     <RouterLink to="/headers">Header</RouterLink>
+    <RouterLink to="/modal">Modal</RouterLink>
+
   </nav>
   <main>
     <RouterView />

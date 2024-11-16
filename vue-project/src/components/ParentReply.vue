@@ -1,5 +1,6 @@
 <script setup>
 import ChildReply from './ChildReply.vue';
+import { timeAgo } from "@/utils/timeCal/calculateTime";
 
 defineProps({
   time: String,
@@ -27,7 +28,7 @@ defineProps({
       <ChildReply
         v-for="child in childList"
         :key="child.commentId"
-        :time="child.updatedAt"
+        :time="timeAgo(child.updatedAt)"
         :author="child.memberName"
         :content="child.content"
       />

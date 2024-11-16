@@ -1,8 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import Headers from "./Headers.vue";
+import { deletePost } from "../services/postAPI.js"
+import Modal from "./shared/Modal.vue";
+import { useNavigation } from "@/utils/navigation/navigation.js";
 
-defineProps({
+const { goBack } = useNavigation();
+
+const props = defineProps({
   tag: String,
   time: String,
   title: String,
@@ -10,11 +15,35 @@ defineProps({
   content: String,
   likes: String,
   headerColor: String,
-  forumCategory: String
+  forumCategory: String,
+  forumId: String
 });
 const showOptions = ref(false);
 function toggleOptions() {
   showOptions.value = !showOptions.value;
+}
+
+const isModalVisible = ref(false); // 모달 표시 여부 관리
+const modalType = ref(""); // 모달의 타입 설정
+
+function showModal(type) {
+  modalType.value = type; // 타입 설정 (e.g., "delete")
+  isModalVisible.value = true; // 모달 표시
+}
+
+function closeModal() {
+  isModalVisible.value = false; // 모달 숨기기
+}
+
+async function deleteThisPost() {
+  try {
+    await deletePost(props.forumId); 
+    isModalVisible.value = false; // 모달 숨기기
+    console.log("Post deleted successfully");
+    goBack()
+  } catch (error) {
+    console.log("Error occurred during deleting post:", error);
+  }
 }
 </script>
 
@@ -32,7 +61,14 @@ function toggleOptions() {
         <span class="options-button" @click="toggleOptions">⋮</span>
         <div v-if="showOptions" class="options-menu">
           <button class="option-button">Edit</button>
-          <button class="option-button">Delete</button>
+          <button class="option-button" @click="showModal('delete')">Delete</button>
+          <!-- Modal -->
+          <Modal
+            v-if="isModalVisible"
+            :type="modalType"
+            @close="closeModal"
+            @delete="deleteThisPost"
+          />
         </div>
       </div>
     </div>

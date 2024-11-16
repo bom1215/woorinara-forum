@@ -2,27 +2,30 @@
 import { ref } from 'vue';
 import ParentReply from './ParentReply.vue'
 import { createParentComment } from '@/services/commentAPI';
+import { timeAgo } from "@/utils/timeCal/calculateTime";
 
 const newReply = ref("")
 const props = defineProps({
   replies: {
     type: Array,
-    required: true
+    required: true,
   },
   forumId: String,
 })
+console.log(props.replies)
+const emit = defineEmits(['renderComments'])
 
-async function addReply() {
+async function addReply(forumId) {
   // 댓글 내용이 비어있지 않은 경우만 처리
   if (newReply.value.trim() === "") {
     alert("Reply cannot be empty!");
     return;
   }
-  
   // 새로운 댓글 추가 API 호출
   createParentComment(props.forumId, newReply.value)
     .then((result) => {
       if (result) {
+        emit('renderComments', forumId)
         // 입력 필드 비우기
         newReply.value = "";
       }
@@ -33,22 +36,22 @@ async function addReply() {
 }
 </script>
 <template>
-  <div class="comment-container">
+  <div v-if="replies" class="comment-container" >
     <!-- Reply Count -->
-    <p class="reply-count">Reply {{ replies.length }}</p>
+    <p v-if="replies.length >0" class="reply-count">Reply {{ replies.length }}</p>
 
     <!-- Reply Input Section -->
     <div class="reply-input">
       <input type="text" v-model="newReply" placeholder="Type your reply..." />
-      <button @click="addReply">➤</button>
+      <button @click="addReply(forumId)">➤</button>
     </div>
 
     <!-- Reply List Section -->
-    <div class="reply-list">
+    <div v-if="replies.length >0" class="reply-list">
         <ParentReply
         v-for="reply in replies"
-        :time = "reply.updatedAt"
-        :author = "reply.memberName"
+        :time = "timeAgo(reply.updatedAt)"
+        :author = "reply.nickName"
         :content = "reply.content"
         :childList = "reply.childList"
         />

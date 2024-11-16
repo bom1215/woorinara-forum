@@ -4,7 +4,7 @@ import * as yup from 'yup';
 const commentSchema = yup.object({
   commentId: yup.number().positive().integer().required(),
   memberId: yup.number().positive().integer().required(),
-  memberName: yup.string().required(),
+  nickName: yup.string().required(),
   parentCommentId: yup.number().nullable(), // null이 허용되는 경우
   content: yup.string().required(),
   createdAt: yup.string().required(), // ISO 형식 문자열로 가정

@@ -6,7 +6,7 @@ import * as yup from 'yup';
 const commentSchema = yup.object({
   commentId: yup.number().positive().integer().required(),
   memberId: yup.number().positive().integer().required(),
-  memberName: yup.string().required(),
+  nickName: yup.string().required(),
   parentCommentId: yup.number().nullable(), // null이 허용되는 경우
   content: yup.string().required(),
   createdAt: yup.string().required(), // ISO 형식 문자열로 가정
@@ -76,7 +76,7 @@ export async function validateSearchPost(data) {
 //           {
 //             commentId: 2,
 //             memberId: 2,
-//             memberName: "lee",
+//             nickName: "lee",
 //             parentCommentId: null,
 //             content: "This is Parent Comment",
 //             createdAt: "2024-11-13T19:13:13.30349",
@@ -85,7 +85,7 @@ export async function validateSearchPost(data) {
 //               {
 //                 commentId: 3,
 //                 memberId: 2,
-//                 memberName: "lee",
+//                 nickName: "lee",
 //                 parentCommentId: 2,
 //                 content: "This is Parent Comment",
 //                 createdAt: "2024-11-13T19:14:04.46975",
