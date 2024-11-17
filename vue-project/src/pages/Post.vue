@@ -15,17 +15,16 @@ const { goBack } = useNavigation();
 const postContent = ref(null);
 async function fetchPosts(forumId) {
   const response = await readPostDetail(forumId);
-  console.log(response)
   if (response) {
     postContent.value = {
       forumId: String(response.forumId),
       title: response.title,
       content: response.content,
       forumCategory: response.forumCategory,
-      tag: response.forumHeader ? response.forumHeader.name : null,
+      forumHeader: response.forumHeader ? response.forumHeader.name : null,
       headerColor: response.forumHeader ? response.forumHeader.color : null,
       time: timeAgo(response.updateAt),
-      author: response.nickName,
+      nickName: response.nickName,
       likes: String(response.heartNum),
       commentList: response.commentList,
     };
@@ -43,7 +42,6 @@ onMounted(() => {
 
 async function RenderCommentList(forumId) {
   const response = await readCommentList(forumId);
-  console.log("response: ",response)
   if (response) {
     postContent.value.commentList = response
   }
@@ -62,10 +60,10 @@ async function RenderCommentList(forumId) {
     <div>
       <!-- Article Section -->
       <Article 
-        :tag="postContent.tag"
+        :forumHeader="postContent.forumHeader"
         :time="postContent.time"
         :title="postContent.title"
-        :author="postContent.author"
+        :nickName="postContent.nickName"
         :content="postContent.content"
         :likes="postContent.likes"
         :headerColor="postContent.headerColor"
@@ -137,7 +135,7 @@ async function RenderCommentList(forumId) {
   border-bottom: 1px solid #eee;
 }
 
-.reply-author,
+.reply-nickName,
 .reply-time {
   color: #888;
   font-size: 14px;

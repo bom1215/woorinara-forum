@@ -10,9 +10,12 @@ const message = ref("")
 if (props.type === "delete") {
     title.value = "Delete";
     message.value = "Are you sure you want to delete this post?";
+} else if (props.type === "back") {
+  title.value = "You have unsaved changes"
+  message.value = "Are you sure you want to go back?"
 }
 // 부모로 이벤트 전달
-defineEmits(["close","delete"]);
+defineEmits(["close","delete", "back"]);
 
 </script>
 

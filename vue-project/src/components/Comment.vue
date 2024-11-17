@@ -3,7 +3,10 @@ import { ref } from 'vue';
 import ParentReply from './ParentReply.vue'
 import { createParentComment } from '@/services/commentAPI';
 import { timeAgo } from "@/utils/timeCal/calculateTime";
+import { useReplyStore } from "@/store/replyStore";
+import { useNavigation } from "@/utils/navigation/navigation.js";
 
+const { goToPath } = useNavigation();
 const newReply = ref("")
 const props = defineProps({
   replies: {
@@ -34,6 +37,23 @@ async function addReply(forumId) {
       console.error("Error adding reply:", error);
     });
 }
+
+
+const replyStore = useReplyStore();
+
+function navigateToCommentDetail(time, nickName, content, childList, forumId, parentCommentId, practice) {
+  console.log("여길봐", time, nickName, content, childList, forumId, parentCommentId, practice)
+  replyStore.time = time;
+  replyStore.nickName = nickName;
+  replyStore.content = content;
+  replyStore.childList = childList;
+  replyStore.forumId = forumId;
+  replyStore.parentCommentId = parentCommentId;
+  replyStore.practice = practice
+
+  console.log("여길봐2",replyStore.parentCommentId,replyStore.practice)
+  goToPath("/commentDetail");
+}
 </script>
 <template>
   <div v-if="replies" class="comment-container" >
@@ -42,7 +62,7 @@ async function addReply(forumId) {
 
     <!-- Reply Input Section -->
     <div class="reply-input">
-      <input type="text" v-model="newReply" placeholder="Type your reply..." />
+      <input type="text" v-model="newReply" placeholder="Type your reply..." maxlength="500"/>
       <button @click="addReply(forumId)">➤</button>
     </div>
 
@@ -51,9 +71,10 @@ async function addReply(forumId) {
         <ParentReply
         v-for="reply in replies"
         :time = "timeAgo(reply.updatedAt)"
-        :author = "reply.nickName"
+        :nickName = "reply.nickName"
         :content = "reply.content"
         :childList = "reply.childList"
+        :replyFunction="() => navigateToCommentDetail(timeAgo(reply.updatedAt), reply.nickName, reply.content, reply.childList, forumId, reply.commentId, '1')"
         />
     </div>
   </div>

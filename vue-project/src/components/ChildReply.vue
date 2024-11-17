@@ -2,7 +2,7 @@
 
 defineProps({
   time: String,
-  author: String,
+  nickName: String,
   content: String,
 });
 
@@ -11,7 +11,7 @@ defineProps({
   <div class="comment">
     <div class="comment-header">
         <img src="@/assets/childReply.svg" alt="icon" />
-      <span class="author">{{ author }}</span>
+      <span class="nickName">{{ nickName }}</span>
       <span class="time">{{ time }}</span>
       <div class="cancel">
         <img src="@/assets/cancel.svg" alt="cancel icon" />
@@ -35,7 +35,7 @@ defineProps({
   font-size: 14px;
 }
 
-.author {
+.nickName {
   font-weight: bold;
   color: #272c33;
 }

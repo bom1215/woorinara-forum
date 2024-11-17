@@ -8,10 +8,10 @@ import { useNavigation } from "@/utils/navigation/navigation.js";
 const { goBack, goToPathWithParams } = useNavigation();
 
 const props = defineProps({
-  tag: String,
+  forumHeader: String,
   time: String,
   title: String,
-  author: String,
+  nickName: String,
   content: String,
   likes: String,
   headerColor: String,
@@ -61,13 +61,14 @@ async function deleteThisPost() {
 }
 
 async function navigateToEdit() {
-  console.log("forumCategory: ",props.forumCategory)
+  console.log("forumHeader: ",props.forumHeader)
   goToPathWithParams('EditPost', {
     forumId: props.forumId, // URL 파라미터
     query: {
       edit: true, // 쿼리 문자열
       forumCategory: props.forumCategory,
-      header: props.header || null,
+      header: props.forumHeader || null,
+      headerColor: props.headerColor || null,
       title: props.title,
       postContent: props.content,
     },
@@ -81,7 +82,7 @@ async function navigateToEdit() {
   <!-- Question Section -->
   <div class="post">
     <div class="header">
-      <Headers v-if="forumCategory === 'QnA'" :text="tag" :color="headerColor" />
+      <Headers v-if="forumCategory === 'QnA'" :text="forumHeader" :color="headerColor" />
       <span class="time">{{ time }}</span>
     </div>
     <!-- Title Section with Options -->
@@ -102,7 +103,7 @@ async function navigateToEdit() {
         </div>
       </div>
     </div>
-    <p class="author">{{ author }}</p>
+    <p class="nickName">{{ nickName }}</p>
     <p class="content">{{ content }}</p>
     <div class="like-section">
       <img alt="like-icon" class="likes svg" src="../assets/like.svg" />
@@ -160,7 +161,7 @@ async function navigateToEdit() {
 .option-button:hover {
   background-color: #f0f0f0;
 }
-.author,
+.nickName,
 .time {
   color: #888;
   font-size: 14px;

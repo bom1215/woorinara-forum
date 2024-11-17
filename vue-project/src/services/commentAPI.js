@@ -36,33 +36,35 @@ export async function createParentComment(forumId, content) {
 
 export async function createChildComment(forumId, parentCommentId, content) {
   const url = import.meta.env.VITE_COMMENTCREATE;
-  const requsetBody = {
+  const requestBody = {
     forumId: forumId,
     parentCommentId: parentCommentId,
     content: content,
   };
-  await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-    },
-    body: JSON.stringify(requsetBody),
-  })
-    .then((response) => {
-      return response.json(); // 응답 Body를 한 번만 읽을 수 있음.
-    })
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from createChildComment API:", result);
-      } else {
-        console.error("Error occured in createChildComment:", result);
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in createChildComment:", error);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      },
+      body: JSON.stringify(requestBody),
     });
+
+    // 응답 처리
+    const result = await response.json();
+    if (response.ok) {
+      console.log("Response from createChildComment API:", result);
+      return result.data
+    } else {
+      console.error("Error occurred in createChildComment:", result);
+    }
+  } catch (error) {
+    console.error("Error occurred in createChildComment:", error);
+  }
 }
+
 
 export async function updateComment(commentId, content) {
   const url = import.meta.env.VITE_COMMENTUPDATE;

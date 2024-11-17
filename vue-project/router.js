@@ -1,4 +1,4 @@
-import ChildReply from "@/components/ChildReply.vue";
+import CommentDetail from "@/pages/CommentDetail.vue";
 import CreatePost from "@/pages/CreatePost.vue";
 import Home from "@/pages/Home.vue";
 import Notice from "@/pages/Notice.vue";
@@ -18,6 +18,7 @@ const routes = [
       edit: route.query.edit === "true", // 쿼리 문자열로 전달된 값 처리
       forumCategory: route.query.forumCategory,
       header: route.query.header,
+      headerColor: route.query.headerColor,
       title: route.query.title,
       postContent: route.query.postContent,
     }),
@@ -25,6 +26,8 @@ const routes = [
   { path: "/post/:forumId", component: Post },
   { path: "/notice", component: Notice },
   { path: "/search", component: Search },
+  { path: "/commentDetail", component: CommentDetail },
+
 ];
 const router = createRouter({
   history: createWebHistory(),

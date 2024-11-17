@@ -1,35 +1,48 @@
 <script setup>
-import ChildReply from './ChildReply.vue';
+import ChildReply from "./ChildReply.vue";
 import { timeAgo } from "@/utils/timeCal/calculateTime";
+// import { useReplyStore } from "@/store/replyStore";
+// import { useNavigation } from "@/utils/navigation/navigation.js";
 
-defineProps({
+// const { goToPath } = useNavigation();
+const props = defineProps({
   time: String,
-  author: String,
+  nickName: String,
   content: String,
   childList: {
     type: Array,
     default: () => [],
-  }
+  },
+  replyFunction: Function,
 });
 
+// const replyStore = useReplyStore();
+
+// function navigateToCommentDetail() {
+//   replyStore.time = props.time;
+//   replyStore.nickName = props.nickName;
+//   replyStore.content = props.content;
+//   replyStore.childList = props.childList;
+//   goToPath("/commentDetail");
+// }
 </script>
 <template>
   <div class="comment">
     <div class="comment-header">
-      <span class="author">{{ author }}</span>
+      <span class="nickName">{{ nickName }}</span>
       <span class="time">{{ time }}</span>
       <div class="cancel">
         <img src="@/assets/cancel.svg" alt="cancel icon" />
-        </div>
+      </div>
     </div>
-    <p class="content"> {{ content }}</p>
-    <a href="#" class="reply-link">Reply</a>
+    <p class="content">{{ content }}</p>
+    <a href="#" class="reply-link" @click="replyFunction">Reply</a>
     <div class="child-replies">
       <ChildReply
         v-for="child in childList"
         :key="child.commentId"
         :time="timeAgo(child.updatedAt)"
-        :author="child.memberName"
+        :nickName="child.nickName"
         :content="child.content"
       />
     </div>
@@ -50,7 +63,7 @@ defineProps({
   font-size: 14px;
 }
 
-.author {
+.nickName {
   font-weight: bold;
   color: #272c33;
 }
