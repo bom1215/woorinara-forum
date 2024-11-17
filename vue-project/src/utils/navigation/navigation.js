@@ -15,10 +15,18 @@ export function useNavigation() {
   function goToPath(path) {
     router.push(path); // 특정 경로로 이동
   }
+  function goToPathWithParams(name, { forumId, query }) {
+  router.push({
+    name: name,
+    params: { forumId }, // URL 파라미터
+    query: query, // 쿼리 문자열
+  });
+}
 
   return {
     goBack,
     goToHome,
     goToPath,
+    goToPathWithParams
   };
 }

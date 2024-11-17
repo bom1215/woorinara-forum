@@ -1,7 +1,9 @@
 <script setup>
 import "../assets/fonts/pretendard-jp.css";
 import Headers from "./Headers.vue";
-import { useRouter } from "vue-router";
+import { useNavigation } from "@/utils/navigation/navigation.js";
+
+const { goToPath } = useNavigation();
 
 const props = defineProps({
   forumId: String,
@@ -14,10 +16,9 @@ const props = defineProps({
   headerColor: String,
   forumCategory: String
 });
-const router = useRouter(); 
 
 function navigateToPost(){
-  router.push(`/post/${props.forumCategory}/${props.forumId}`);
+  goToPath(`/post/${props.forumId}`);
 }
 </script>
 <template>

@@ -58,8 +58,8 @@ watch(activeTab, (newTab) => {
 });
 
 
-function createPost() {
-  goToPath("/post/new");
+function createPost(forumId) {
+  goToPath(`/post/new`);
 }
 </script>
 <template>

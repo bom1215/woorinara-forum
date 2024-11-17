@@ -1,12 +1,41 @@
 <script setup>
 import { ref } from "vue";
-import { createPost } from "@/services/postAPI.js";
-import { useRouter } from "vue-router";
+import { createPost, updatePost } from "@/services/postAPI.js";
+import { useNavigation } from "@/utils/navigation/navigation.js";
 
-const forumCategory = ref("");
-const header = ref("");
-const title = ref("");
-const postContent = ref("");
+const { goToPath, goBack } = useNavigation();
+
+const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
+  forumCategory: {
+    type: String,
+    default: ""
+  },
+  header: {
+    type: String,
+    default: ""
+  },
+  title: {
+    type: String,
+    default: ""
+  },
+  postContent: {
+    type: String,
+    default: ""
+  },
+  forumId: {
+    type: String,
+    default: ""
+  },
+})
+
+const localforumCategory = ref(props.forumCategory);
+const localheader = ref(props.header);
+const localtitle = ref(props.title);
+const localpostContent = ref(props.postContent);
 const header_option = ref([
   "visa",
   "Banking and Finance",
@@ -24,34 +53,43 @@ function resize(event) {
   element.style.height = "18px"; // 초기 높이 설정
   element.style.height = `${element.scrollHeight}px`; // 내용에 맞게 높이 설정
 }
-const router = useRouter(); 
 
 function navigateToPost(forumId){
-  router.push(`/post/${forumCategory}/${forumId}`);
+  goToPath(`/post/${forumId}`);
 }
 
 async function complete() {
   // 필수 입력값 확인
-  if (!title.value || !postContent.value || !forumCategory.value) {
-    console.error("All fields are required.");
-    return;
-  }
+  if (
+  !localtitle.value ||
+  !localpostContent.value ||
+  !localforumCategory.value ||
+  (localforumCategory.value === "QnA" && (!localheader || localheader === ""))
+) {
+  console.error("All fields are required.");
+  return;
+}
+
 
   // 게시글 생성 함수 호출
   try {
-    const response = await createPost(
-      title.value,
-      postContent.value,
-      forumCategory.value,
-      forumCategory.value === "QnA" ? header.value : null // QnA가 아니면 header를 null로 설정
-    );
-    console.log("Post created successfully");
 
+    const response = props.edit
+      ? await updatePost(
+      props.forumId,
+      localtitle.value,
+      localpostContent.value,
+      localforumCategory.value === "QnA" ? localheader.value : null // QnA가 아니면 header를 null로 설정
+    )
+    : await createPost(
+      localtitle.value,
+      localpostContent.value,
+      localforumCategory.value,
+      localforumCategory.value === "QnA" ? localheader.value : null // QnA가 아니면 header를 null로 설정
+    );
     if (response) {
-      // navigateToPost(response.forumId)
-      navigateToPost(32)
+      navigateToPost(response.forumId)
     }
-    
   } catch (error) {
     console.error("Error occurred while creating the post:", error);
   }
@@ -70,30 +108,32 @@ async function complete() {
 
     <!-- Form Content -->
     <div class="form">
-      <select class="select-board" v-model="forumCategory">
+      <select v-if="edit === false" class="select-board" v-model="localforumCategory">
         <option value="" disabled selected>Select a Board</option>
         <option>General</option>
         <option>QnA</option>
         <option>Jobs</option>
       </select>
 
+      <h1 v-if="edit === true">{{ forumCategory }}</h1>
+
       <select
-        v-if="forumCategory == 'QnA'"
-        :class="{ header: forumCategory == 'QnA' }"
-        v-model="header" 
+        v-if="localforumCategory == 'QnA'"
+        :class="{ localheader: localforumCategory == 'QnA' }"
+        v-model="localheader" 
       >
         <option v-for="option in header_option">{{ option }}</option>
       </select>
 
       <textarea
-        v-model="title"
+        v-model="localtitle"
         @input="resize"
         class="title-input"
         placeholder="Please enter the title."
         maxlength="300"
       />
       <textarea
-        v-model="postContent"
+        v-model="localpostContent"
         @input="resize"
         class="postContent-input"
         placeholder="Ask any questions or stories you're curious about."

@@ -136,34 +136,41 @@ export async function searchPost(word, page, size) {
 
 export async function updatePost(forumId, title, content, header) {
   const url = import.meta.env.VITE_POSTUPDATE;
-  const requsetBody = {
+  const requestBody = {
     forumId: forumId,
     title: title,
     content: content,
     header: header,
   };
-  await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-    },
-    body: JSON.stringify(requsetBody),
-  })
-    .then((response) => {
-      return response.json(); // 응답 Body를 한 번만 읽을 수 있음.
-    })
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from updatePost API:", result); 
-      } else {
-        console.error("Error occured in updatePost:", result);
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in updatePost:", error);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      },
+      body: JSON.stringify(requestBody),
     });
+
+    // 응답 상태 확인
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.status === 200) {
+      console.log("Response from updatePost API:", result);
+      return result.data
+    } else {
+      console.error("Error occurred in updatePost:", result);
+    }
+  } catch (error) {
+    console.error("Error occurred in updatePost:", error);
+  }
 }
+
 
 export async function deletePost(forumId) {
   const url = import.meta.env.VITE_POSTDELETE;

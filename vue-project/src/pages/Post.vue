@@ -8,6 +8,10 @@ import { readCommentList } from "@/services/commentAPI.js";
 import { timeAgo } from "@/utils/timeCal/calculateTime";
 import { useRoute } from 'vue-router';
 
+import { useNavigation } from "@/utils/navigation/navigation.js";
+
+const { goBack } = useNavigation();
+
 const postContent = ref(null);
 async function fetchPosts(forumId) {
   const response = await readPostDetail(forumId);
@@ -20,7 +24,7 @@ async function fetchPosts(forumId) {
       forumCategory: response.forumCategory,
       tag: response.forumHeader ? response.forumHeader.name : null,
       headerColor: response.forumHeader ? response.forumHeader.color : null,
-      time: timeAgo(response.updatedAt),
+      time: timeAgo(response.updateAt),
       author: response.nickName,
       likes: String(response.heartNum),
       commentList: response.commentList,
@@ -50,7 +54,7 @@ async function RenderCommentList(forumId) {
   <div class="container" v-if="postContent">
     <!-- Header -->
     <div class="header">
-      <button class="back-button">
+      <button @click="goBack()" class="back-button">
         <img alt="Back logo" src="../assets/back.svg" />
       </button>
       <h2>{{ postContent.forumCategory }}</h2>
@@ -65,7 +69,7 @@ async function RenderCommentList(forumId) {
         :content="postContent.content"
         :likes="postContent.likes"
         :headerColor="postContent.headerColor"
-        :forumCategory="postContent.forumHeader"
+        :forumCategory="postContent.forumCategory"
         :forumId = "postContent.forumId"
       />
       <!-- Comment Section -->

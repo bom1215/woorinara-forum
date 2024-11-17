@@ -23,15 +23,7 @@ import Post from './pages/Post.vue';
 <template>
   <nav>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/post/new">createPost</RouterLink>
-    <RouterLink to="/post/qna/1">Q&A_sameple_post</RouterLink>
-    <!-- <RouterLink to="/post/general/1">General_sameple_post</RouterLink> -->
-    <!-- <RouterLink to="/post/jobs/1">Jobs_sameple_post</RouterLink> -->
-    <RouterLink to="/notice/bombom12">Notice</RouterLink>
-    <RouterLink to="/search/word">Search_sample</RouterLink>
-    <RouterLink to="/comment/childReply">ChildReply</RouterLink>
-    <RouterLink to="/headers">Header</RouterLink>
-    <RouterLink to="/modal">Modal</RouterLink>
+    <RouterLink to="/notice">Notice</RouterLink>
 
   </nav>
   <main>

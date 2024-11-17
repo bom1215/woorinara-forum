@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import Headers from "./Headers.vue";
 import { deletePost } from "../services/postAPI.js"
 import Modal from "./shared/Modal.vue";
 import { useNavigation } from "@/utils/navigation/navigation.js";
 
-const { goBack } = useNavigation();
+const { goBack, goToPathWithParams } = useNavigation();
 
 const props = defineProps({
   tag: String,
@@ -22,7 +22,21 @@ const showOptions = ref(false);
 function toggleOptions() {
   showOptions.value = !showOptions.value;
 }
+// 메뉴 외부 클릭 시 닫기
+function closeOptionsOnClickOutside(event) {
+  const optionsMenu = document.querySelector(".options-container");
+  if (!optionsMenu.contains(event.target)) {
+    showOptions.value = false;
+  }
+}
+// 이벤트 리스너 등록 및 해제
+onMounted(() => {
+  document.addEventListener("click", closeOptionsOnClickOutside);
+});
 
+onBeforeUnmount(() => {
+  document.removeEventListener("click", closeOptionsOnClickOutside);
+});
 const isModalVisible = ref(false); // 모달 표시 여부 관리
 const modalType = ref(""); // 모달의 타입 설정
 
@@ -45,6 +59,22 @@ async function deleteThisPost() {
     console.log("Error occurred during deleting post:", error);
   }
 }
+
+async function navigateToEdit() {
+  console.log("forumCategory: ",props.forumCategory)
+  goToPathWithParams('EditPost', {
+    forumId: props.forumId, // URL 파라미터
+    query: {
+      edit: true, // 쿼리 문자열
+      forumCategory: props.forumCategory,
+      header: props.header || null,
+      title: props.title,
+      postContent: props.content,
+    },
+  });
+}
+
+
 </script>
 
 <template>
@@ -60,7 +90,7 @@ async function deleteThisPost() {
       <div class="options-container">
         <span class="options-button" @click="toggleOptions">⋮</span>
         <div v-if="showOptions" class="options-menu">
-          <button class="option-button">Edit</button>
+          <button class="option-button"@click="navigateToEdit">Edit</button>
           <button class="option-button" @click="showModal('delete')">Delete</button>
           <!-- Modal -->
           <Modal

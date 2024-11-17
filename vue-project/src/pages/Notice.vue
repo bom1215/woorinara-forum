@@ -1,31 +1,55 @@
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, onMounted } from 'vue';
+import { readNoticeList } from '../services/noticeAPI.js'
+import { formatDate } from "@/utils/timeCal/formatTime";
+import { useNavigation } from "@/utils/navigation/navigation.js";
 
-export default {
-  setup() {
-    const notifications = ref([
-      { message: "Someone replied to your post.", date: "2024.11.12 12:46:13" },
-      { message: "Someone replied to your comment.", date: "2024.11.11 16:43:11" },
-      { message: "Someone replied to your post.", date: "2024.11.10 09:43:13" },
-    ]);
+const { goBack, goToPath } = useNavigation();
 
-    return { notifications };
-  },
-};
+const notifications = ref(null)
+
+async function fetchNotices() {
+
+  const response = await readNoticeList(); 
+
+  if (response) {
+    notifications.value = response.map((item) => ({
+      noticeId: String(item.Id),
+      memberId : String(item.memberId),
+      nickName: item.memberName,
+      content: item.content,
+      forumId: String(item.refId),
+      isRead : item.isRead,
+      time: formatDate(item.updatedAt)
+    }));
+  }
+}
+function navigateToPost(forumId){
+  goToPath(`/post/${forumId}`);
+}
+
+// 초기 데이터 로드
+onMounted(() => {
+  fetchNotices();
+});
+
+
 </script>
 <template>
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <button class="back-button">⬅️</button>
+      <button @click="goBack()" class="back-button">
+        <img alt="Back logo" src="../assets/back.svg" />
+      </button>
       <h1>Notice</h1>
     </div>
 
     <!-- Notification List -->
-    <div class="notification-list">
-      <div v-for="(notification, index) in notifications" :key="index" class="notification-item">
-        <p class="message">{{ notification.message }}</p>
-        <p class="date">{{ notification.date }}</p>
+    <div v-if="notifications" class="notification-list">
+      <div @click= navigateToPost(notification.forumId) v-for="(notification) in notifications" class="notification-item">
+        <p class="message">{{ notification.content }}</p>
+        <p class="date">{{ notification.time }}</p>
       </div>
     </div>
   </div>
