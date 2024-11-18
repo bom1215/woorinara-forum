@@ -1,4 +1,5 @@
 import { validateNoticeList } from "../utils/validation/validNoticeList.js";
+import { fetchToken } from "./getToken.js";
 
 export async function readNoticeList() {
   const url = import.meta.env.VITE_NOTICE;
@@ -6,7 +7,9 @@ export async function readNoticeList() {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        Authorization: `Bearer ${await fetchToken()}`,
+
       },
     });
 

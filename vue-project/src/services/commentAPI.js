@@ -1,5 +1,5 @@
-import { validateCommentList } from "../utils/validation/validReadCommentList.js"
-
+import { validateCommentList } from "../utils/validation/validReadCommentList.js";
+import { fetchToken } from "./getToken.js";
 
 export async function createParentComment(forumId, content) {
   const url = import.meta.env.VITE_COMMENTCREATE;
@@ -13,7 +13,8 @@ export async function createParentComment(forumId, content) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        Authorization: `Bearer ${await fetchToken()}`,
       },
       body: JSON.stringify(requestBody),
     });
@@ -33,7 +34,6 @@ export async function createParentComment(forumId, content) {
   }
 }
 
-
 export async function createChildComment(forumId, parentCommentId, content) {
   const url = import.meta.env.VITE_COMMENTCREATE;
   const requestBody = {
@@ -47,7 +47,8 @@ export async function createChildComment(forumId, parentCommentId, content) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        Authorization: `Bearer ${await fetchToken()}`,
       },
       body: JSON.stringify(requestBody),
     });
@@ -56,7 +57,7 @@ export async function createChildComment(forumId, parentCommentId, content) {
     const result = await response.json();
     if (response.ok) {
       console.log("Response from createChildComment API:", result);
-      return result.data
+      return result.data;
     } else {
       console.error("Error occurred in createChildComment:", result);
     }
@@ -64,7 +65,6 @@ export async function createChildComment(forumId, parentCommentId, content) {
     console.error("Error occurred in createChildComment:", error);
   }
 }
-
 
 export async function updateComment(commentId, content) {
   const url = import.meta.env.VITE_COMMENTUPDATE;
@@ -76,7 +76,8 @@ export async function updateComment(commentId, content) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      Authorization: `Bearer ${await fetchToken()}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -96,7 +97,7 @@ export async function updateComment(commentId, content) {
 }
 
 export async function deleteComment(commentId) {
-  const url = import.meta.env.VITE_COMMENTDELETE+`/${commentId}`;
+  const url = import.meta.env.VITE_COMMENTDELETE + `/${commentId}`;
   const requsetBody = {
     commentId: commentId,
   };
@@ -104,7 +105,8 @@ export async function deleteComment(commentId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+      Authorization: `Bearer ${await fetchToken()}`,
     },
     body: JSON.stringify(requsetBody),
   })
@@ -123,8 +125,6 @@ export async function deleteComment(commentId) {
     });
 }
 
-
-
 // contentList 없을 경우 빈 리스트 반환
 export async function readCommentList(forumId) {
   const url = import.meta.env.VITE_COMMENTGENERAL + `/${forumId}`;
@@ -132,7 +132,8 @@ export async function readCommentList(forumId) {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        Authorization: `Bearer ${await fetchToken()}`,
       },
     });
 
@@ -152,11 +153,8 @@ export async function readCommentList(forumId) {
   }
 }
 
-
-
 // createParentComment(1, "test_parent_comment"); //부모 댓글
 // createParentComment(1, 1,"test_child_comment"); // 자식 댓글
-
 
 // updateComment(9, "test_updated_comment")
 // deleteComment(8)

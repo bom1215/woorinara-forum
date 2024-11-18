@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "web-server"
+version = "0.1.0"
+description = ""
+authors = ["bom1215 <bom1215@naver.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.5"
+starlette = "^0.41.2"
+uvicorn = "^0.32.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
