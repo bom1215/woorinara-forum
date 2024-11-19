@@ -98,32 +98,37 @@ export async function updateComment(commentId, content) {
 
 export async function deleteComment(commentId) {
   const url = import.meta.env.VITE_COMMENTDELETE + `/${commentId}`;
-  const requsetBody = {
+  const requestBody = {
     commentId: commentId,
   };
-  await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-      Authorization: `Bearer ${await fetchToken()}`,
-    },
-    body: JSON.stringify(requsetBody),
-  })
-    .then((response) => {
-      return response.json(); // 응답 Body를 한 번만 읽을 수 있음.
-    })
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from deleteComment API:", result);
-      } else {
-        console.error("Error occured in deleteComment:", result);
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in deleteComment:", error);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await fetchToken()}`, // 동적으로 토큰 가져오기
+      },
+      body: JSON.stringify(requestBody),
     });
+
+    // 응답 처리
+    const result = await response.json(); // 응답 Body 읽기
+
+    if (response.ok) {
+      console.log("Response from deleteComment API:", result);
+      return result; // 성공적인 응답 반환
+    } else {
+      console.error("Error occurred in deleteComment:", result);
+      return null; // 실패한 경우 null 반환
+    }
+  } catch (error) {
+    // 네트워크 오류 또는 기타 예외 처리
+    console.error("Error occurred in deleteComment:", error);
+    return null; // 오류 발생 시 null 반환
+  }
 }
+
 
 // contentList 없을 경우 빈 리스트 반환
 export async function readCommentList(forumId) {

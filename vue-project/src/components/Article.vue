@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import Headers from "./Headers.vue";
-import { deletePost } from "../services/postAPI.js"
+import { deletePost } from "../services/postAPI.js";
 import Modal from "./shared/Modal.vue";
 import { useNavigation } from "@/utils/navigation/navigation.js";
+import postFooter from "./postFooter.vue";
 
 const { goBack, goToPathWithParams } = useNavigation();
 
@@ -13,10 +14,13 @@ const props = defineProps({
   title: String,
   nickName: String,
   content: String,
-  likes: String,
+  likes: Number,
   headerColor: String,
   forumCategory: String,
-  forumId: String
+  forumId: Number,
+  viewCnt: Number,
+  isMine: Boolean,
+  commentNum:  Number,
 });
 const showOptions = ref(false);
 function toggleOptions() {
@@ -25,7 +29,7 @@ function toggleOptions() {
 // 메뉴 외부 클릭 시 닫기
 function closeOptionsOnClickOutside(event) {
   const optionsMenu = document.querySelector(".options-container");
-  if (!optionsMenu.contains(event.target)) {
+  if (showOptions.value && !optionsMenu.contains(event.target)) {
     showOptions.value = false;
   }
 }
@@ -51,18 +55,18 @@ function closeModal() {
 
 async function deleteThisPost() {
   try {
-    await deletePost(props.forumId); 
+    await deletePost(props.forumId);
     isModalVisible.value = false; // 모달 숨기기
     console.log("Post deleted successfully");
-    goBack()
+    goBack();
   } catch (error) {
     console.log("Error occurred during deleting post:", error);
   }
 }
 
 async function navigateToEdit() {
-  console.log("forumHeader: ",props.forumHeader)
-  goToPathWithParams('EditPost', {
+  console.log("forumHeader: ", props.forumHeader);
+  goToPathWithParams("EditPost", {
     forumId: props.forumId, // URL 파라미터
     query: {
       edit: true, // 쿼리 문자열
@@ -74,25 +78,29 @@ async function navigateToEdit() {
     },
   });
 }
-
-
 </script>
 
 <template>
   <!-- Question Section -->
   <div class="post">
     <div class="header">
-      <Headers v-if="forumCategory === 'QnA'" :text="forumHeader" :color="headerColor" />
+      <Headers
+        v-if="forumCategory === 'QnA'"
+        :text="forumHeader"
+        :color="headerColor"
+      />
       <span class="time">{{ time }}</span>
     </div>
     <!-- Title Section with Options -->
     <div class="title">
       <h3>{{ title }}</h3>
-      <div class="options-container">
+      <div v-if="isMine" class="options-container">
         <span class="options-button" @click="toggleOptions">⋮</span>
         <div v-if="showOptions" class="options-menu">
-          <button class="option-button"@click="navigateToEdit">Edit</button>
-          <button class="option-button" @click="showModal('delete')">Delete</button>
+          <button class="option-button" @click="navigateToEdit">Edit</button>
+          <button class="option-button" @click="showModal('delete')">
+            Delete
+          </button>
           <!-- Modal -->
           <Modal
             v-if="isModalVisible"
@@ -105,11 +113,14 @@ async function navigateToEdit() {
     </div>
     <p class="nickName">{{ nickName }}</p>
     <p class="content">{{ content }}</p>
-    <div class="like-section">
-      <img alt="like-icon" class="likes svg" src="../assets/like.svg" />
-      <span class="likes">{{ likes }}</span>
-    </div>
   </div>
+  <postFooter
+    :forumId="forumId"
+    :likes="likes"
+    :viewCnt="viewCnt"
+    :commentNum="commentNum"
+  />
+  
 </template>
 
 <style scoped>
@@ -171,17 +182,5 @@ async function navigateToEdit() {
   font-size: 16px;
   line-height: 1.4;
 }
-.like-section {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
-.like-icon {
-  font-size: 20px;
-}
-.likes {
-  margin-left: 5px;
-  color: #888;
-  font-size: 14px;
-}
+
 </style>

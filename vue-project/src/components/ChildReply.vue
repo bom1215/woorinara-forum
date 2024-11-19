@@ -4,6 +4,7 @@ defineProps({
   time: String,
   nickName: String,
   content: String,
+  isMine: Boolean,
 });
 
 </script>
@@ -13,7 +14,7 @@ defineProps({
         <img src="@/assets/childReply.svg" alt="icon" />
       <span class="nickName">{{ nickName }}</span>
       <span class="time">{{ time }}</span>
-      <div class="cancel">
+      <div v-if="isMine" class="cancel">
         <img src="@/assets/cancel.svg" alt="cancel icon" />
         </div>
     </div>

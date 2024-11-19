@@ -28,3 +28,33 @@ export async function readNoticeList() {
     return null; // 네트워크 에러 발생 시 null 반환
   }
 }
+
+
+export async function readPostDetailFromNotice(forumId, alarmId) {
+  const url = import.meta.env.VITE_POSTGENERAL + `/${forumId}?alarmId=${alarmId}`;
+  console.log("readPostDetail URL: ", url);
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
+        Authorization: `Bearer ${await fetchToken()}`,
+      },
+    }
+  );
+
+    const result = await response.json();
+
+    if (result.status === 200) {
+      console.log("Response from readPostDetailFromNotice:", result);
+      validatePostDetail(result.data);
+      return result.data; // 정상적으로 데이터를 반환
+    } else {
+      console.error("Error occurred in readPostDetailFromNotice:", result);
+      return null; // 에러 발생 시 null 반환
+    }
+  } catch (error) {
+    console.error("Error occurred in readPostDetailFromNotice:", error);
+    return null; // 네트워크 에러 발생 시 null 반환
+  }
+}

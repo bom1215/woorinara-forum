@@ -14,14 +14,20 @@ const pageSize = 10; // 페이지 크기
     <div class="header">
       <h1 class="header-title">Community</h1>
       <div class="header-icons">
-        <img @click="goToPath('/search')" alt="Search logo" src="../assets/serach.svg" />
-        <img @click="goToPath('/notice')" alt="bell logo" src="../assets/bell.svg" />
+        <img
+          @click="goToPath('/search')"
+          alt="Search logo"
+          src="../assets/serach.svg"
+        />
+        <img
+          @click="goToPath('/notice')"
+          alt="bell logo"
+          src="../assets/bell.svg"
+        />
       </div>
     </div>
     <!-- Content -->
-    <PostList
-    :page="currentPage"
-    :size="pageSize"/>
+    <PostList :page="currentPage" :size="pageSize" />
   </div>
 </template>
 

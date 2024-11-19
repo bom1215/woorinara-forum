@@ -7,7 +7,7 @@ import uvicorn
 app = FastAPI()
 
 origins = [
-    "http://127.0.0.1:8000",
+    "http://43.201.31.70:8000",
 ]
 
 app.add_middleware(
@@ -28,4 +28,4 @@ def index():
 
 APPLICATION_PORT = 8000
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=APPLICATION_PORT, reload=True)
+    uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)

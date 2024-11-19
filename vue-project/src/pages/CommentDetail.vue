@@ -3,45 +3,38 @@ import { ref } from "vue";
 import { useNavigation } from "@/utils/navigation/navigation.js";
 import ParentReply from "../components/ParentReply.vue";
 import { useReplyStore } from "@/store/replyStore";
-import { storeToRefs } from "pinia";
+// import { storeToRefs } from "pinia";
 import { createChildComment } from "@/services/commentAPI";
 
 const { goBack } = useNavigation();
 const newReply = ref(""); // 검색 입력값
 
 const replyStore = useReplyStore();
-const { time, nickName, content, childList, forumId, parentCommentId, practice } =
-  storeToRefs(replyStore);
-    // 상태를 출력
+const { time, nickName, content, childList, forumId, parentCommentId} =
+  replyStore;
+
 
 function addChildReply() {
   // 댓글 내용이 비어있지 않은 경우만 처리
-  if (newReply.value.trim() === "") {
-    alert("Reply cannot be empty!");
+  if (newReply.value.trim() == "") {
     return;
     }
-  console.log(time, nickName, content, childList, forumId, parentCommentId, practice)
-  console.log(forumId, parentCommentId, newReply, practice)
   // 새로운 댓글 추가 API 호출
-  createChildComment(forumId, parentCommentId, newReply)
-    .then((result) => {
-      if (result) {
-        // 입력 필드 비우기
-        newReply.value = "";
-        // 로컬 캐싱 데이터 업데이트
-        const newComment = {
-          updatedAt: new Date().toISOString(),
-          nickName: nickName.value,
-          content: newReply.value.trim(),
-          childList: [], // 대댓글은 기본적으로 비어 있음
-        };
-        childList.value.push(newComment); // 로컬 데이터에 즉시 추가
-      }
-    })
-    .catch((error) => {
-      console.error("Error adding reply:", error);
-    });
-}
+  const response = createChildComment(forumId, parentCommentId, newReply.value)
+    if (response) {
+      // 로컬 캐싱 데이터 업데이트
+      const newComment = {
+        updatedAt: new Date().toISOString(),
+        nickName: nickName,
+        content: newReply.value.trim(),
+        childList: [], // 대댓글은 기본적으로 비어 있음
+      };
+      childList.push(newComment); // 로컬 데이터에 즉시 추가
+      // 입력 필드 비우기
+      newReply.value = "";
+    }
+  }
+
 
 function openKeybaord() {
   
@@ -74,7 +67,7 @@ function openKeybaord() {
         placeholder="Type your reply..."
         maxlength="500"
       />
-      <button @click="addChildReply()">➤</button>
+      <button @click="addChildReply">➤</button>
     </div>
   </div>
 </template>

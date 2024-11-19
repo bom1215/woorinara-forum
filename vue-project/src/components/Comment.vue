@@ -5,6 +5,7 @@ import { createParentComment } from '@/services/commentAPI';
 import { timeAgo } from "@/utils/timeCal/calculateTime";
 import { useReplyStore } from "@/store/replyStore";
 import { useNavigation } from "@/utils/navigation/navigation.js";
+import { deleteComment } from "@/services/commentAPI";
 
 const { goToPath } = useNavigation();
 const newReply = ref("")
@@ -13,7 +14,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  forumId: String,
+  forumId: Number,
 })
 console.log(props.replies)
 const emit = defineEmits(['renderComments'])
@@ -38,22 +39,24 @@ async function addReply(forumId) {
     });
 }
 
-
 const replyStore = useReplyStore();
 
-function navigateToCommentDetail(time, nickName, content, childList, forumId, parentCommentId, practice) {
-  console.log("여길봐", time, nickName, content, childList, forumId, parentCommentId, practice)
+function navigateToCommentDetail(time, nickName, content, childList, forumId, parentCommentId) {
   replyStore.time = time;
   replyStore.nickName = nickName;
   replyStore.content = content;
   replyStore.childList = childList;
   replyStore.forumId = forumId;
   replyStore.parentCommentId = parentCommentId;
-  replyStore.practice = practice
-
-  console.log("여길봐2",replyStore.parentCommentId,replyStore.practice)
   goToPath("/commentDetail");
 }
+async function deleteReply(commentId) {
+  const response = await deleteComment(commentId)
+  if (response) {
+    emit('renderComments', props.forumId)
+  }
+}
+
 </script>
 <template>
   <div v-if="replies" class="comment-container" >
@@ -74,7 +77,9 @@ function navigateToCommentDetail(time, nickName, content, childList, forumId, pa
         :nickName = "reply.nickName"
         :content = "reply.content"
         :childList = "reply.childList"
-        :replyFunction="() => navigateToCommentDetail(timeAgo(reply.updatedAt), reply.nickName, reply.content, reply.childList, forumId, reply.commentId, '1')"
+        :isMine = "reply.isMine"
+        :goToReply="() => navigateToCommentDetail(timeAgo(reply.updatedAt), reply.nickName, reply.content, reply.childList, forumId, reply.commentId)"
+        @delete="deleteReply(reply.commentId)"
         />
     </div>
   </div>

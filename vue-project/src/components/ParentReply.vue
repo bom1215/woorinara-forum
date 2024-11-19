@@ -1,10 +1,8 @@
 <script setup>
 import ChildReply from "./ChildReply.vue";
 import { timeAgo } from "@/utils/timeCal/calculateTime";
-// import { useReplyStore } from "@/store/replyStore";
-// import { useNavigation } from "@/utils/navigation/navigation.js";
+// import { deleteComment } from "@/services/commentAPI";
 
-// const { goToPath } = useNavigation();
 const props = defineProps({
   time: String,
   nickName: String,
@@ -13,30 +11,25 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  replyFunction: Function,
+  isMine: Boolean,
+  goToReply: Function,
+  // deleteReply: Function,
 });
 
-// const replyStore = useReplyStore();
 
-// function navigateToCommentDetail() {
-//   replyStore.time = props.time;
-//   replyStore.nickName = props.nickName;
-//   replyStore.content = props.content;
-//   replyStore.childList = props.childList;
-//   goToPath("/commentDetail");
-// }
+
 </script>
 <template>
   <div class="comment">
     <div class="comment-header">
       <span class="nickName">{{ nickName }}</span>
       <span class="time">{{ time }}</span>
-      <div class="cancel">
+      <div @click="$emit('delete')" v-if="isMine && content!='This comment has been deleted.'" class="cancel">
         <img src="@/assets/cancel.svg" alt="cancel icon" />
       </div>
     </div>
     <p class="content">{{ content }}</p>
-    <a href="#" class="reply-link" @click="replyFunction">Reply</a>
+    <a href="#" class="reply-link" @click="goToReply">Reply</a>
     <div class="child-replies">
       <ChildReply
         v-for="child in childList"
@@ -44,6 +37,7 @@ const props = defineProps({
         :time="timeAgo(child.updatedAt)"
         :nickName="child.nickName"
         :content="child.content"
+        :isMine="child.isMine"
       />
     </div>
   </div>

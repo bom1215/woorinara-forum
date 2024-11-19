@@ -87,7 +87,6 @@ export async function readPostList(page, size) {
   const url =
     import.meta.env.VITE_POSTGENERAL + `/list?page=${page}&size=${size}`;
   console.log("url: ", url);
-  console.log("accessToken: ",await fetchToken())
 
   try {
     const response = await fetch(url, {
@@ -215,37 +214,40 @@ export async function deletePost(forumId) {
     });
 }
 
-export async function readLikes(forumId) {
+export async function sendLikes(forumId) {
   const url = import.meta.env.VITE_POSTLIKES;
-  const requsetBody = {
+  const requestBody = {
     forumId: forumId,
   };
-  await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
-      Authorization: `Bearer ${await fetchToken()}`,
-    },
-    body: JSON.stringify(requsetBody),
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.status == 200) {
-        console.log("Response from readLikes:", result);
-        if (isInteger(result.data)) {
-          return result.data;
-        } else {
-          console.error("Likes are not integer. Likes: ", result.data);
-        }
-      } else {
-        console.error("Error occured in readLikes:", result);
-      }
-    })
-    .catch((error) => {
-      console.error("Error occured in readLikes:", error);
+
+  try {
+    const token = await fetchToken();
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(requestBody),
     });
+
+    const result = await response.json();
+
+    if (result.status === 200) {
+      console.log("Response from readLikes:", result);
+      if (Number.isInteger(result.data)) {
+        return result.data;
+      } else {
+        console.error("Likes are not integer. Likes: ", result.data);
+      }
+    } else {
+      console.error("Error occurred in readLikes:", result);
+    }
+  } catch (error) {
+    console.error("Error occurred in readLikes:", error);
+  }
 }
+
 
 // createPost("test_title", "test_content", "QnA", "Visa");
 // readPostDetail(20);

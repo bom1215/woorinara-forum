@@ -8,7 +8,8 @@ const commentSchema = yup.object({
   parentCommentId: yup.number().nullable(), // null이 허용되는 경우
   content: yup.string().required(),
   createdAt: yup.string().required(), // ISO 형식 문자열로 가정
-  updateAt: yup.string().required(),
+  updatedAt: yup.string().required(),
+  isMine: yup.boolean().required(),
   childList: yup.array().of(
     yup.lazy(() => commentSchema) // 재귀적으로 대댓글 구조를 허용
   ).required()
@@ -30,7 +31,10 @@ const postDetailSchema = yup.object({
     .string()
     .oneOf(['General', 'QnA', 'Jobs'])
     .required(),
-  heartNum: yup.number().integer().min(0).required() // 0 또는 양의 정수
+  heartNum: yup.number().integer().min(0).required(), // 0 또는 양의 정수
+  isMine: yup.boolean().required(),
+  viewCnt: yup.number().integer().min(0).required(),
+  nickName: yup.string().required(),
 });
 
 // 유효성 검사 실행 함수

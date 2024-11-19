@@ -6,7 +6,7 @@ import { readPostDetail } from "@/services/postAPI.js";
 import { readCommentList } from "@/services/commentAPI.js";
 
 import { timeAgo } from "@/utils/timeCal/calculateTime";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 
 import { useNavigation } from "@/utils/navigation/navigation.js";
 
@@ -17,7 +17,7 @@ async function fetchPosts(forumId) {
   const response = await readPostDetail(forumId);
   if (response) {
     postContent.value = {
-      forumId: String(response.forumId),
+      forumId: response.forumId,
       title: response.title,
       content: response.content,
       forumCategory: response.forumCategory,
@@ -25,28 +25,28 @@ async function fetchPosts(forumId) {
       headerColor: response.forumHeader ? response.forumHeader.color : null,
       time: timeAgo(response.updateAt),
       nickName: response.nickName,
-      likes: String(response.heartNum),
+      likes: response.heartNum,
       commentList: response.commentList,
+      viewCnt: response.viewCnt,
+      isMine: response.isMine,
+      commentNum: (response.commentList).length
     };
     console.log(postContent);
-
   }
 }
 const route = useRoute(); // 라우터 정보 가져오기
 
 onMounted(() => {
-  const id  = route.params.forumId; // 라우터 파라미터에서 id 가져오기
+  const id = route.params.forumId; // 라우터 파라미터에서 id 가져오기
   fetchPosts(id);
 });
-
 
 async function RenderCommentList(forumId) {
   const response = await readCommentList(forumId);
   if (response) {
-    postContent.value.commentList = response
+    postContent.value.commentList = response;
   }
 }
-
 </script>
 <template>
   <div class="container" v-if="postContent">
@@ -59,7 +59,7 @@ async function RenderCommentList(forumId) {
     </div>
     <div>
       <!-- Article Section -->
-      <Article 
+      <Article
         :forumHeader="postContent.forumHeader"
         :time="postContent.time"
         :title="postContent.title"
@@ -68,15 +68,18 @@ async function RenderCommentList(forumId) {
         :likes="postContent.likes"
         :headerColor="postContent.headerColor"
         :forumCategory="postContent.forumCategory"
-        :forumId = "postContent.forumId"
+        :forumId="postContent.forumId"
+        :viewCnt="postContent.viewCnt"
+        :isMine="postContent.isMine"
+        :commentNum="postContent.commentNum"
       />
       <!-- Comment Section -->
       <div>
         <Comment
           :replies="postContent.commentList"
           :forumId="postContent.forumId"
-          @renderComments="RenderCommentList" 
-          />
+          @renderComments="RenderCommentList"
+        />
       </div>
     </div>
   </div>

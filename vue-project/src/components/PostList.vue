@@ -26,13 +26,13 @@ async function fetchPosts() {
 
   if (response) {
     allPosts.value = response.content.map((item) => ({
-      forumId: String(item.forumId),
+      forumId: item.forumId,
       title: item.title,
       tag: item.forumHeader ? item.forumHeader.name : null,
       time: timeAgo(item.updateAt),
       nickName: item.nickName,
       content: item.content,
-      likes: String(item.heartNum),
+      likes: item.heartNum,
       headerColor: item.forumHeader ? item.forumHeader.color : null,
       forumCategory: item.forumCategory,
       viewCnt: item.viewCnt,

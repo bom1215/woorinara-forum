@@ -2,7 +2,7 @@
 import "../assets/fonts/pretendard-jp.css";
 import Headers from "./Headers.vue";
 import { useNavigation } from "@/utils/navigation/navigation.js";
-
+import postFooter from "./postFooter.vue";
 const { goToPath } = useNavigation();
 
 const props = defineProps({
@@ -12,54 +12,43 @@ const props = defineProps({
   title: String,
   nickName: String,
   content: String,
-  likes: String,
+  likes: Number,
   headerColor: String,
   forumCategory: String,
-  viewCnt: String,
-  isMine: String,
-  commentNum: String
+  viewCnt: Number,
+  isMine: Boolean,
+  commentNum: Number,
 });
 
-function navigateToPost(){
+function navigateToPost() {
   goToPath(`/post/${props.forumId}`);
 }
 </script>
 <template>
   <div class="post" @click="navigateToPost">
     <div v-if="forumCategory === 'QnA'" class="header">
-      <Headers 
-    :text= tag
-    :color=headerColor />
+      <Headers :text="tag" :color="headerColor" />
       <span class="time">{{ time }}</span>
     </div>
-    <h2 class="title">{{ title }}
+    <h2 class="title">
+      {{ title }}
       <span v-if="forumCategory !== 'QnA'" class="time">{{ time }}</span>
     </h2>
-    
+
     <p class="nickName">{{ nickName }}</p>
     <p class="content">{{ content }}</p>
-    <div class="footer">
-    <span class="views">
-      <img alt="view logo" class="views svg" src="../assets/view.svg" />
-      {{ viewCnt }}
-    </span>
-    <div class="right">
-      <span class="likes">
-        <img alt="like logo" class="likes svg" src="../assets/like.svg" />
-        {{ likes }}
-      </span>
-      <span class="comments">
-        <img alt="comment logo" class="comments svg" src="../assets/comment.svg" />
-        {{ commentNum }}
-      </span>
-    </div>
   </div>
-  </div>
+  <postFooter
+    :forumId="forumId"
+    :likes="likes"
+    :viewCnt="viewCnt"
+    :commentNum="commentNum"
+  />
 </template>
 <style scoped>
 .post {
   /* width : fit-content; */
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding-top: 20px;
   padding-right: 24px;
   padding-bottom: 12px;
@@ -75,7 +64,7 @@ function navigateToPost(){
 }
 
 .time {
-  color: #929AA6;
+  color: #929aa6;
   font-size: 12px;
 }
 
@@ -100,54 +89,4 @@ function navigateToPost(){
   line-height: 1.5;
   margin-bottom: 16px;
 }
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 10px;
-}
-
-.views {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-  gap: 20px; /* 아이콘 간 간격 */
-}
-
-.footer img {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-}
 </style>
-
-
-/* like/shre */
-
-/* Auto layout */
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
-padding: 0px;
-gap: 12px;
-
-width: 342px;
-height: 24px;
-
-
-/* Inside auto layout */
-flex: none;
-order: 2;
-align-self: stretch;
-flex-grow: 0;
