@@ -8,7 +8,7 @@ const commentSchema = yup.object({
   parentCommentId: yup.number().nullable(), // null이 허용되는 경우
   content: yup.string().required(),
   createdAt: yup.string().required(), // ISO 형식 문자열로 가정
-  updatedAt: yup.string().required(),
+  updateAt: yup.string().required(),
   childList: yup.array().of(
     yup.lazy(() => commentSchema) // 재귀적으로 대댓글 구조를 허용
   ).required()

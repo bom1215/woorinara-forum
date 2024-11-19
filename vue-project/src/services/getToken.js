@@ -4,7 +4,6 @@ export async function fetchToken() {
   try {
     // const response = await axios.get("/protected/resource");
     const accessToken = localStorage.getItem('accessToken');
-    console.log(accessToken)
     return accessToken
   } catch (error) {
     console.error("Error fetching data:", error);

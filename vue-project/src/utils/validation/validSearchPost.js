@@ -32,7 +32,12 @@ const postDetailSchema = yup.object({
     .string()
     .oneOf(['General', 'QnA', 'Jobs'])
     .required(),
-  heartNum: yup.number().integer().min(0).required() // 0 또는 양의 정수
+  heartNum: yup.number().integer().min(0).required(), // 0 또는 양의 정수
+  viewCnt: yup.number().integer().min(0).required(),
+  nickName: yup.string().required(),
+  createdAt: yup.string().required(), // ISO 형식 문자열로 가정
+  updatedAt: yup.string().required(),
+  isMine: yup.boolean().required(),
 });
 
 

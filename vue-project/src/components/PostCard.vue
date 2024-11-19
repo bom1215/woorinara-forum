@@ -10,11 +10,14 @@ const props = defineProps({
   tag: String,
   time: String,
   title: String,
-  author: String,
+  nickName: String,
   content: String,
   likes: String,
   headerColor: String,
-  forumCategory: String
+  forumCategory: String,
+  viewCnt: String,
+  isMine: String,
+  commentNum: String
 });
 
 function navigateToPost(){
@@ -33,14 +36,24 @@ function navigateToPost(){
       <span v-if="forumCategory !== 'QnA'" class="time">{{ time }}</span>
     </h2>
     
-    <p class="author">{{ author }}</p>
+    <p class="nickName">{{ nickName }}</p>
     <p class="content">{{ content }}</p>
     <div class="footer">
+    <span class="views">
+      <img alt="view logo" class="views svg" src="../assets/view.svg" />
+      {{ viewCnt }}
+    </span>
+    <div class="right">
       <span class="likes">
         <img alt="like logo" class="likes svg" src="../assets/like.svg" />
         {{ likes }}
       </span>
+      <span class="comments">
+        <img alt="comment logo" class="comments svg" src="../assets/comment.svg" />
+        {{ commentNum }}
+      </span>
     </div>
+  </div>
   </div>
 </template>
 <style scoped>
@@ -75,7 +88,7 @@ function navigateToPost(){
   display: flex;
 }
 
-.author {
+.nickName {
   color: #929aa6;
   font-size: 0.875rem;
   margin-bottom: 8px;
@@ -90,18 +103,51 @@ function navigateToPost(){
 
 .footer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-end;
+  background-color: #FFFFFF;
+  padding: 10px 20px;
+  border-radius: 10px;
 }
 
-.likes {
+.views {
   display: flex;
   align-items: center;
-  color: #5c687a;
-  font-size: 0.875rem;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
 }
 
-.likes svg {
-  margin-right: 4px;
+.right {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* 아이콘 간 간격 */
+}
+
+.footer img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
 </style>
+
+
+/* like/shre */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
+gap: 12px;
+
+width: 342px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+align-self: stretch;
+flex-grow: 0;

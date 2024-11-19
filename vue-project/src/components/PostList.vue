@@ -30,11 +30,14 @@ async function fetchPosts() {
       title: item.title,
       tag: item.forumHeader ? item.forumHeader.name : null,
       time: timeAgo(item.updateAt),
-      author: item.nickName,
+      nickName: item.nickName,
       content: item.content,
       likes: String(item.heartNum),
       headerColor: item.forumHeader ? item.forumHeader.color : null,
       forumCategory: item.forumCategory,
+      viewCnt: item.viewCnt,
+      isMine: item.isMine,
+      commentNum: (item.commentList).length
     }));
     // 기본 탭("General")에 맞게 데이터 필터링
     filterPosts(activeTab.value);
@@ -58,7 +61,7 @@ watch(activeTab, (newTab) => {
 });
 
 
-function createPost(forumId) {
+function createPost() {
   goToPath(`/post/new`);
 }
 </script>
@@ -85,11 +88,14 @@ function createPost(forumId) {
           :tag="card.tag"
           :time="card.time"
           :title="card.title"
-          :author="card.author"
+          :nickName="card.nickName"
           :content="card.content"
           :likes="card.likes"
           :headerColor="card.headerColor"
           :forumCategory="card.forumCategory"
+          :viewCnt="card.viewCnt"
+          :isMine="card.isMine"
+          :commentNum="card.commentNum"
         />
       </div>
     </div>

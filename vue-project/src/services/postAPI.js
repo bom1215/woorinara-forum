@@ -64,7 +64,8 @@ export async function readPostDetail(forumId) {
         // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
         Authorization: `Bearer ${await fetchToken()}`,
       },
-    });
+    }
+  );
 
     const result = await response.json();
 
@@ -86,6 +87,8 @@ export async function readPostList(page, size) {
   const url =
     import.meta.env.VITE_POSTGENERAL + `/list?page=${page}&size=${size}`;
   console.log("url: ", url);
+  console.log("accessToken: ",await fetchToken())
+
   try {
     const response = await fetch(url, {
       method: "GET",
