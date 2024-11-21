@@ -1,5 +1,6 @@
 import { validateNoticeList } from "../utils/validation/validNoticeList.js";
 import { fetchToken } from "./getToken.js";
+import { addLogging } from "@/utils/logging/log.js";
 
 export async function readNoticeList() {
   const url = import.meta.env.VITE_NOTICE;
@@ -16,15 +17,14 @@ export async function readNoticeList() {
     const result = await response.json();
 
     if (result.status === 200) {
-      console.log("Response from readNoticeList:", result);
       validateNoticeList(result.data);
       return result.data; // 정상적으로 데이터를 반환
     } else {
-      console.error("Error occurred in readNoticeList:", result);
+      addLogging("Error occurred in readNoticeList:", result);
       return null; // 에러 발생 시 null 반환
     }
   } catch (error) {
-    console.error("Error occurred in readNoticeList:", error);
+    addLogging("Error occurred in readNoticeList:", error);
     return null; // 네트워크 에러 발생 시 null 반환
   }
 }
@@ -32,7 +32,6 @@ export async function readNoticeList() {
 
 export async function readPostDetailFromNotice(forumId, alarmId) {
   const url = import.meta.env.VITE_POSTGENERAL + `/${forumId}?alarmId=${alarmId}`;
-  console.log("readPostDetail URL: ", url);
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -46,15 +45,14 @@ export async function readPostDetailFromNotice(forumId, alarmId) {
     const result = await response.json();
 
     if (result.status === 200) {
-      console.log("Response from readPostDetailFromNotice:", result);
       validatePostDetail(result.data);
       return result.data; // 정상적으로 데이터를 반환
     } else {
-      console.error("Error occurred in readPostDetailFromNotice:", result);
+      addLogging("Error occurred in readPostDetailFromNotice:", result);
       return null; // 에러 발생 시 null 반환
     }
   } catch (error) {
-    console.error("Error occurred in readPostDetailFromNotice:", error);
+    addLogging("Error occurred in readPostDetailFromNotice:", error);
     return null; // 네트워크 에러 발생 시 null 반환
   }
 }

@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { addLogging } from "@/utils/logging/log.js";
 
 // 알림 구조에 대한 스키마 정의
 const noticeSchema = yup.object({
@@ -18,8 +19,8 @@ const noticeArraySchema = yup.array().of(noticeSchema).required();
 export async function validateNoticeList(data) {
   try {
     await noticeArraySchema.validate(data);
-    console.log("유효한 데이터입니다.");
+    addLogging("유효한 데이터입니다.");
   } catch (error) {
-    console.error("유효성 오류:", error.errors);
+    addLogging("유효성 오류:", error.errors);
   }
 }

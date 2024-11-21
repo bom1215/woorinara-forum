@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 // import { validatePostDetail } from "/readPostDetail.js";
+import { addLogging } from "@/utils/logging/log.js";
 
 
 // 댓글 구조에 대한 스키마 정의
@@ -64,9 +65,9 @@ const responseSchema = yup.object({
 export async function validateSearchPost(data) {
   try {
     await responseSchema.validate(data);
-    console.log("유효한 데이터입니다.");
+    addLogging("유효한 데이터입니다.");
   } catch (error) {
-    console.error("유효성 오류:", error.errors);
+    addLogging("유효성 오류:", error.errors);
   }
 }
 

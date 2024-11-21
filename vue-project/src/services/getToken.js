@@ -1,11 +1,19 @@
-import axios from "../axios-config.js"; // Axios 설정 파일
+// import axios from "../axios-config.js"; // Axios 설정 파일
+import { addLogging } from "@/utils/logging/log.js";
+
+
+function getCookie(cookieName) {
+    const cookieMap = Object.fromEntries(
+        document.cookie.split("; ").map(cookie => cookie.split("="))
+    );
+    return cookieMap[cookieName] || null;
+}
 
 export async function fetchToken() {
-  try {
-    // const response = await axios.get("/protected/resource");
-    const accessToken = localStorage.getItem('accessToken');
-    return accessToken
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+
+  const accessToken = getCookie('accessToken');
+  const refreshToken = getCookie('refreshToken');
+  addLogging("accessToken: ", accessToken)
+  addLogging("refreshToken: ", refreshToken)
+  return accessToken
 }

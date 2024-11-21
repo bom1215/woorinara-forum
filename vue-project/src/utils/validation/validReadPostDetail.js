@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { addLogging } from "@/utils/logging/log.js";
 
 // 댓글 구조에 대한 스키마 정의
 const commentSchema = yup.object({
@@ -41,9 +42,9 @@ const postDetailSchema = yup.object({
 export async function validatePostDetail(data) {
   try {
     await postDetailSchema.validate(data);
-    console.log("유효한 데이터입니다.");
+    addLogging("유효한 데이터입니다.");
   } catch (error) {
-    console.error("유효성 오류:", error.errors);
+    addLogging("유효성 오류:", error.errors);
   }
 }
 
