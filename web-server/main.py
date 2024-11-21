@@ -29,29 +29,19 @@ app.mount("/assets", StaticFiles(directory="../vue-project/dist/assets"))
 # Access Token 및 Refresh Token 검증
 @app.get("/auth")
 def handle_tokens(
-    auth: str = Header(default=None),  # Authorization 헤더에서 Access Token
+    access_token: str = Header(default=None),  # Authorization 헤더에서 Access Token
     refresh_token: str = Header(default=None),  # Refresh-Token 헤더에서 Refresh Token
     response: Response = None,
 ):
-    logging.info(f"authorization: {auth}")
+    logging.info(f"Access Token: {access_token}")
     logging.info(f"refreshToken: {refresh_token}")
 
-    # Authorization 있는지 확인
-    if not auth:
-        raise HTTPException(status_code=400, detail="Missing Authorization")
+    # access_token 있는지 확인
+    if not access_token:
+        raise HTTPException(status_code=400, detail="Missing Access_token")
     # Refresh-Token 유효성 확인
     if not refresh_token:
         raise HTTPException(status_code=400, detail="Missing Refresh-Token headers")
-
-    # Bearer Token 형식 확인
-    if not auth.startswith("Bearer "):
-        raise HTTPException(
-            status_code=400, detail="Invalid Authorization header format"
-        )
-
-    # 토큰 추출
-    access_token = auth.split(" ")[1]  # "Bearer <token>"에서 토큰만 추출
-    logging.info(f"Access Token: {access_token}")
 
     response = RedirectResponse(url="/")
 
