@@ -29,10 +29,15 @@ app.mount("/assets", StaticFiles(directory="../vue-project/dist/assets"))
 # Access Token 및 Refresh Token 검증
 @app.get("/auth")
 def handle_tokens(
-    access_token: str = Header(default=None),  # Authorization 헤더에서 Access Token
-    refresh_token: str = Header(default=None),  # Refresh-Token 헤더에서 Refresh Token
+    # access_token: str = Header(default=None),  # Authorization 헤더에서 Access Token
+    # refresh_token: str = Header(default=None),  # Refresh-Token 헤더에서 Refresh Token
+    request: Request,
     response: Response = None,
 ):
+    # 헤더에서 Authorization 값을 가져옴
+    access_token = request.headers.get("authorization")
+    refresh_token = request.headers.get("Refresh-Token")
+
     logging.info(f"Access Token: {access_token}")
     logging.info(f"refreshToken: {refresh_token}")
 
@@ -81,4 +86,5 @@ async def receive_log(request: Request):
 
 APPLICATION_PORT = 8000
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)
+    # uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)
+    uvicorn.run("main:app", port=APPLICATION_PORT, reload=True)
