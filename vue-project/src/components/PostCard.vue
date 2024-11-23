@@ -6,7 +6,7 @@ import postFooter from "./postFooter.vue";
 const { goToPath } = useNavigation();
 
 const props = defineProps({
-  forumId: String,
+  forumId: Number,
   tag: String,
   time: String,
   title: String,

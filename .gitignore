@@ -1,2 +1,6 @@
 vue-project/.env
 vue-project/.env.production
+web-server/new.swift
+web-server/webView.swift
+web-server/client_logs.log
+web-server/__pycache__

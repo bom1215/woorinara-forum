@@ -1,4 +1,3 @@
-// import axios from "../axios-config.js"; // Axios 설정 파일
 import { addLogging } from "@/utils/logging/log.js";
 
 
@@ -13,7 +12,7 @@ export async function fetchToken() {
 
   const accessToken = getCookie('accessToken');
   const refreshToken = getCookie('refreshToken');
-  addLogging("accessToken: ", accessToken)
-  addLogging("refreshToken: ", refreshToken)
+  // addLogging("accessToken: ", accessToken)
+  // addLogging("refreshToken: ", refreshToken)
   return accessToken
 }

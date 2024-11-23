@@ -8,7 +8,6 @@ export async function readNoticeList() {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
         Authorization: `Bearer ${await fetchToken()}`,
 
       },
@@ -36,7 +35,6 @@ export async function readPostDetailFromNotice(forumId, alarmId) {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        // Authorization: `Bearer ${import.meta.env.VITE_ACCESSTOKEN}`,
         Authorization: `Bearer ${await fetchToken()}`,
       },
     }

@@ -6,14 +6,20 @@ from starlette.staticfiles import StaticFiles
 import uvicorn
 import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s - %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+    handlers=[
+        logging.FileHandler("server.log", encoding="utf-8"),
+        # logging.StreamHandler(),  # 콘솔 출력
+    ],
+)
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
 app = FastAPI()
 
-origins = [
-    "http://43.201.31.70:8000",
-]
+origins = ["http://43.201.31.70:8000", "http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,8 +35,6 @@ app.mount("/assets", StaticFiles(directory="../vue-project/dist/assets"))
 # Access Token 및 Refresh Token 검증
 @app.get("/auth")
 def handle_tokens(
-    # access_token: str = Header(default=None),  # Authorization 헤더에서 Access Token
-    # refresh_token: str = Header(default=None),  # Refresh-Token 헤더에서 Refresh Token
     request: Request,
     response: Response = None,
 ):
@@ -69,22 +73,15 @@ async def home_page():
 
 @app.post("/logging")
 async def receive_log(request: Request):
-    data = await request.json()
-    logs = data
-
+    logs = await request.json()
     client_host = request.client.host  # 클라이언트 IP
-    user_agent = request.headers.get("User-Agent")  # 사용자 에이전트
-
-    logging.info(f"[Client ({client_host}, {user_agent}] {logs}")
-
-    file_handler = logging.FileHandler("client_logs.log", encoding="utf-8")
-    formatter = logging.Formatter("%(asctime)s - %(message)s")
-    file_handler.setFormatter(formatter)
-    logging.getLogger().addHandler(file_handler)
+    logger.info(f"Client IP ({client_host}) {logs}")
     return {"status": "success"}
 
 
-APPLICATION_PORT = 8000
 if __name__ == "__main__":
-    # uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)
-    uvicorn.run("main:app", port=APPLICATION_PORT, reload=True)
+    APPLICATION_PORT = 8000
+    uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)
+
+    # APPLICATION_PORT = 5173
+    # uvicorn.run("main:app", port=APPLICATION_PORT, reload=True)
