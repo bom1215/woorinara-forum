@@ -36,6 +36,7 @@ const postDetailSchema = yup.object({
   isMine: yup.boolean().required(),
   viewCnt: yup.number().integer().min(0).required(),
   nickName: yup.string().required(),
+  isHeart: yup.boolean().required(),
 });
 
 // 유효성 검사 실행 함수

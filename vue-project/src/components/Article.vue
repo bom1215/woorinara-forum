@@ -20,7 +20,8 @@ const props = defineProps({
   forumId: Number,
   viewCnt: Number,
   isMine: Boolean,
-  commentNum:  Number,
+  commentNum: Number,
+  isHeart: Boolean
 });
 const showOptions = ref(false);
 function toggleOptions() {
@@ -119,6 +120,7 @@ async function navigateToEdit() {
     :likes="likes"
     :viewCnt="viewCnt"
     :commentNum="commentNum"
+    :isHeart="isHeart"
   />
   
 </template>

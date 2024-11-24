@@ -4,3 +4,4 @@ web-server/new.swift
 web-server/webView.swift
 web-server/client_logs.log
 web-server/__pycache__
+web-server/server.log

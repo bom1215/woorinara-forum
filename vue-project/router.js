@@ -24,6 +24,7 @@ const routes = [
     }),
   },
   { path: "/post/:forumId", component: Post },
+  { path: "/post/:forumId/alarmId/:alarmId", component: Post},
   { path: "/notice", component: Notice },
   { path: "/search", component: Search },
   { path: "/commentDetail", component: CommentDetail },

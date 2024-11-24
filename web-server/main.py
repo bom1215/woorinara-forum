@@ -80,8 +80,8 @@ async def receive_log(request: Request):
 
 
 if __name__ == "__main__":
-    APPLICATION_PORT = 8000
-    uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)
+    # APPLICATION_PORT = 8000
+    # uvicorn.run("main:app", host="43.201.31.70", port=APPLICATION_PORT, reload=True)
 
-    # APPLICATION_PORT = 5173
-    # uvicorn.run("main:app", port=APPLICATION_PORT, reload=True)
+    APPLICATION_PORT = 5173
+    uvicorn.run("main:app", port=APPLICATION_PORT, reload=True)

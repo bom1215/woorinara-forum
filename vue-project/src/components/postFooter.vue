@@ -7,9 +7,10 @@ const props = defineProps({
   likes: Number,
   viewCnt: Number,
   commentNum: Number,
+  isHeart: Boolean
 });
 
-const isLiked = ref(false);
+const localIsHeart = ref(props.isHeart);
 const localLikes = ref(Number(props.likes)); // 내부 상태 변수로 likes 관리
 
 async function fetchLikes() {
@@ -17,7 +18,7 @@ async function fetchLikes() {
     const likes = await sendLikes(props.forumId); // 서버에서 좋아요 처리 결과 가져오기
     if (likes !== null && likes !== undefined) {
       localLikes.value = likes; // props.likes 대신 localLikes 업데이트
-      isLiked.value = !isLiked.value; // 좋아요 상태 변경
+      localIsHeart.value = !localIsHeart.value; // 좋아요 상태 변경
       console.log("Send Like to server complete");
     }
   } catch (error) {
@@ -36,13 +37,13 @@ async function fetchLikes() {
         <img
           alt="like logo"
           src="../assets/emptyLike.svg"
-          v-if="!isLiked"
+          v-if="!localIsHeart"
           @click="fetchLikes"
         />
         <img
           alt="like logo"
           src="../assets/like.svg"
-          v-if="isLiked"
+          v-if="localIsHeart"
           @click="fetchLikes"
         />
         {{ localLikes }}

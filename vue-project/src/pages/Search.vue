@@ -61,7 +61,6 @@ h1 {
   border-radius: 20px;
   padding: 10px 15px;
   width: 100%;
-  max-width: 400px;
 }
 
 input[type="text"] {

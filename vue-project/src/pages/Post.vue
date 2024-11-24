@@ -13,8 +13,8 @@ import { useNavigation } from "@/utils/navigation/navigation.js";
 const { goBack } = useNavigation();
 
 const postContent = ref(null);
-async function fetchPosts(forumId) {
-  const response = await readPostDetail(forumId);
+async function fetchPosts(forumId, alarmId) {
+  const response = await readPostDetail(forumId, alarmId);
   if (response) {
     postContent.value = {
       forumId: response.forumId,
@@ -29,7 +29,8 @@ async function fetchPosts(forumId) {
       commentList: response.commentList,
       viewCnt: response.viewCnt,
       isMine: response.isMine,
-      commentNum: (response.commentList).length
+      commentNum: (response.commentList).length,
+      isHeart: response.isHeart
     };
     console.log(postContent);
   }
@@ -37,8 +38,9 @@ async function fetchPosts(forumId) {
 const route = useRoute(); // 라우터 정보 가져오기
 
 onMounted(() => {
-  const id = route.params.forumId; // 라우터 파라미터에서 id 가져오기
-  fetchPosts(id);
+  const postId = route.params.forumId; // 라우터 파라미터에서 postId 가져오기
+  const alarmId = route.params.alarmId; // 라우터 파라미터에서 alarmId 가져오기
+  fetchPosts(postId, alarmId);
 });
 
 async function RenderCommentList(forumId) {
@@ -72,6 +74,7 @@ async function RenderCommentList(forumId) {
         :viewCnt="postContent.viewCnt"
         :isMine="postContent.isMine"
         :commentNum="postContent.commentNum"
+        :isHeart="postContent.isHeart"
       />
       <!-- Comment Section -->
       <div>

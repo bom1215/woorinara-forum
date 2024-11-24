@@ -12,33 +12,40 @@ const props = defineProps({
   page: Number,
   size: Number,
 });
-
+const localPage = ref(props.page);
+const isLoading = ref(false);
 const allPosts = ref([]); // 모든 데이터를 캐싱
 const activeTab = ref("General");
 const tabs = ["General", "QnA", "Jobs"];
 const cards = ref(null);
+const isLast = ref(null);
 
-async function fetchPosts() {
-
-  const response = props.word  
-  ? await searchPost(props.word, props.page, props.size) // 검색어가 있으면
-  : await readPostList(props.page, props.size); // 검색어가 없으면
-
+async function fetchPosts(page) {
+  const response = props.word
+    ? await searchPost(props.word, page, props.size) // 검색어가 있으면
+    : await readPostList(page, props.size); // 검색어가 없으면
+  console.log(response);
   if (response) {
-    allPosts.value = response.content.map((item) => ({
-      forumId: item.forumId,
-      title: item.title,
-      tag: item.forumHeader ? item.forumHeader.name : null,
-      time: timeAgo(item.updateAt),
-      nickName: item.nickName,
-      content: item.content,
-      likes: item.heartNum,
-      headerColor: item.forumHeader ? item.forumHeader.color : null,
-      forumCategory: item.forumCategory,
-      viewCnt: item.viewCnt,
-      isMine: item.isMine,
-      commentNum: (item.commentList).length
-    }));
+    response.content.map((item) =>
+      allPosts.value.push({
+        forumId: item.forumId,
+        title: item.title,
+        tag: item.forumHeader ? item.forumHeader.name : null,
+        time: timeAgo(item.updateAt),
+        nickName: item.nickName,
+        content: item.content,
+        likes: item.heartNum,
+        headerColor: item.forumHeader ? item.forumHeader.color : null,
+        forumCategory: item.forumCategory,
+        viewCnt: item.viewCnt,
+        isMine: item.isMine,
+        commentNum: item.commentList.length,
+        isHeart: item.isHeart,
+      })
+    );
+    isLast.value = response.last;
+    console.log(allPosts);
+
     // 기본 탭("General")에 맞게 데이터 필터링
     filterPosts(activeTab.value);
   }
@@ -52,7 +59,7 @@ function filterPosts(category) {
 
 // 초기 데이터 로드
 onMounted(() => {
-  fetchPosts();
+  fetchPosts(props.page);
 });
 
 // 탭 클릭 시 동작을 감지하여 fetchPosts 호출
@@ -60,6 +67,21 @@ watch(activeTab, (newTab) => {
   filterPosts(newTab);
 });
 
+function showMorePosts() {
+  if (isLoading.value) return;
+
+  isLoading.value = true;
+  localPage.value += 1;
+  console.log("localPage: ", localPage.value);
+  fetchPosts(localPage.value)
+    .then(() => {
+      isLoading.value = false;
+    })
+    .catch((error) => {
+      console.error("Failed to load posts:", error);
+      isLoading.value = false;
+    });
+}
 
 function createPost() {
   goToPath(`/post/new`);
@@ -96,9 +118,21 @@ function createPost() {
           :viewCnt="card.viewCnt"
           :isMine="card.isMine"
           :commentNum="card.commentNum"
+          :isHeart="card.isHeart"
         />
       </div>
+      <div class="load-more-container">
+        <button
+          v-if="!isLast && !isLoading"
+          v-on:click="showMorePosts"
+          class="load-more-button"
+        >
+          Show more posts
+        </button>
+        <span v-else-if="isLoading" class="loading-text">Loading...</span>
+      </div>
     </div>
+
     <img
       alt="add-icon"
       class="add-icon"
@@ -180,4 +214,35 @@ function createPost() {
   cursor: pointer; /* 클릭 가능 */
   z-index: 1000; /* 다른 요소 위에 배치 */
 }
+/* 컨테이너 정렬 */
+.load-more-container {
+  display: flex; /* 버튼과 텍스트를 중앙 정렬하기 위해 사용 */
+  justify-content: center; /* 가로 가운데 정렬 */
+  align-items: center; /* 세로 가운데 정렬 */
+  width: 100%; /* 가로 전체 길이 */
+  margin: 16px 0; /* 위아래 여백 추가 */
+}
+
+/* 버튼 스타일 */
+.load-more-button {
+  width: 100%; /* 가로 전체 길이 */
+  max-width: 600px; /* 최대 너비 설정 (선택 사항) */
+  background: transparent; /* 투명한 배경 */
+  color: #3182ce; /* 텍스트 색상 파란색 */
+  border: 1px solid #3182ce; /* 파란색 테두리 */
+  padding: 12px; /* 버튼 내부 여백 */
+  font-size: 16px; /* 글씨 크기 */
+  border-radius: 4px; /* 버튼 모서리 둥글게 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  transition: background 0.3s ease, color 0.3s ease; /* 호버 효과 애니메이션 */
+}
+
+/* 로딩 텍스트 스타일 */
+.loading-text {
+  font-size: 16px; /* 글씨 크기 */
+  color: gray; /* 로딩 텍스트 색상 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+}
+
 </style>

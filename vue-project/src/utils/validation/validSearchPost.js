@@ -40,6 +40,7 @@ const postDetailSchema = yup.object({
   createdAt: yup.string().required(), // ISO 형식 문자열로 가정
   updatedAt: yup.string().required(),
   isMine: yup.boolean().required(),
+  isHeart: yup.boolean().required(),
 });
 
 

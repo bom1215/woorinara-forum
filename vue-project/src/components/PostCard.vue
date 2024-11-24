@@ -18,6 +18,7 @@ const props = defineProps({
   viewCnt: Number,
   isMine: Boolean,
   commentNum: Number,
+  isHeart: Boolean
 });
 
 function navigateToPost() {
@@ -43,6 +44,7 @@ function navigateToPost() {
     :likes="likes"
     :viewCnt="viewCnt"
     :commentNum="commentNum"
+    :isHeart="isHeart"
   />
 </template>
 <style scoped>

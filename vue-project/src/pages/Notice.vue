@@ -1,39 +1,36 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { readNoticeList } from '../services/noticeAPI.js'
+import { ref, onMounted } from "vue";
+import { readNoticeList } from "../services/noticeAPI.js";
 import { formatDate } from "@/utils/timeCal/formatTime";
 import { useNavigation } from "@/utils/navigation/navigation.js";
 
 const { goBack, goToPath } = useNavigation();
 
-const notifications = ref(null)
+const notifications = ref(null);
 
 async function fetchNotices() {
-
-  const response = await readNoticeList(); 
+  const response = await readNoticeList();
 
   if (response) {
     notifications.value = response.map((item) => ({
-      noticeId: String(item.Id),
-      memberId : String(item.memberId),
+      alarmId: item.id,
+      memberId: item.memberId,
       nickName: item.memberName,
       content: item.content,
-      forumId: String(item.refId),
-      isRead : item.isRead,
-      time: formatDate(item.updatedAt)
+      forumId: item.refId,
+      isRead: item.isRead,
+      time: formatDate(item.updatedAt),
     }));
   }
 }
-function navigateToPost(forumId){
-  goToPath(`/post/${forumId}`);
+function navigateToPost(forumId, alarmId) {
+  goToPath(`/post/${forumId}/alarmId/${alarmId}`);
 }
 
 // 초기 데이터 로드
 onMounted(() => {
   fetchNotices();
 });
-
-
 </script>
 <template>
   <div class="container">
@@ -47,8 +44,17 @@ onMounted(() => {
 
     <!-- Notification List -->
     <div v-if="notifications" class="notification-list">
-      <div @click= navigateToPost(notification.forumId) v-for="(notification) in notifications" class="notification-item">
-        <p class="message">{{ notification.content }}</p>
+      <div
+        @click="navigateToPost(notification.forumId, notification.alarmId)"
+        v-for="notification in notifications"
+        class="notification-item"
+      >
+        <p
+          class="message"
+          :class="{ read: notification.isRead, unread: !notification.isRead }"
+        >
+          {{ notification.content }}
+        </p>
         <p class="date">{{ notification.time }}</p>
       </div>
     </div>
@@ -88,8 +94,13 @@ onMounted(() => {
 .message {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
   margin: 0;
+}
+.read{
+color: #ddd;
+}
+.unread{
+  color: #333;
 }
 
 .date {

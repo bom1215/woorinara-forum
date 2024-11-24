@@ -44,16 +44,18 @@ export async function createPost(title, content, forumCategory, header) {
   }
 }
 
-export async function readPostDetail(forumId) {
-  const url = import.meta.env.VITE_POSTGENERAL + `/${forumId}`;
+export async function readPostDetail(forumId, alarmId) {
+  const url =
+    alarmId === undefined
+      ? import.meta.env.VITE_POSTGENERAL + `/${forumId}`
+      : import.meta.env.VITE_POSTGENERAL + `/${forumId}?alarmId=${alarmId}`;
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${await fetchToken()}`,
       },
-    }
-  );
+    });
 
     const result = await response.json();
 
@@ -220,7 +222,6 @@ export async function sendLikes(forumId) {
     addLogging("Error occurred in readLikes:", error);
   }
 }
-
 
 // createPost("test_title", "test_content", "QnA", "Visa");
 // readPostDetail(20);
