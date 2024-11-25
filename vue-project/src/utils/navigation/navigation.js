@@ -11,6 +11,9 @@ export function useNavigation() {
   function goToHome() {
     router.push("/"); // 홈으로 이동
   }
+  function replace(prePath) {
+    router.replace(prePath)
+  }
 
   function goToPath(path) {
     router.push(path); // 특정 경로로 이동
@@ -27,6 +30,7 @@ export function useNavigation() {
     goBack,
     goToHome,
     goToPath,
-    goToPathWithParams
+    goToPathWithParams,
+    replace
   };
 }

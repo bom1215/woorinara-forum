@@ -5,7 +5,7 @@ import { useNavigation } from "@/utils/navigation/navigation.js";
 import Headers from "../components/Headers.vue";
 import Modal from "../components/shared/Modal.vue";
 
-const { goToPath, goBack } = useNavigation();
+const { goToPath, goBack, replace } = useNavigation();
 
 const props = defineProps({
   edit: {
@@ -61,7 +61,9 @@ function resize(event) {
 }
 
 function navigateToPost(forumId) {
-  goToPath(`/post/${forumId}`);
+  // goToPath(`/post/${forumId}`);
+  replace(`/post/${forumId}`);
+  
 }
 
 async function complete() {
